@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="main.js"></script>
+    
     <title>Workout Timer</title>
 </head>
 <body>
@@ -24,12 +24,20 @@
         </div>
     </section>
     <section>
-        <label for="exercises">Exercises</label>
-        <input type="text" id="exercises">
-        <ul>
-            <li>List item 1</li>
-            <li>List item 2</li>
-        </ul>
+        <div>
+            <label for="exercises">Exercises</label>
+            <input type="text" id="exercises" placeholder="Exercise name">
+            <button onclick="addExercise()">Add exercise</button>
+            <div id="messageContainer"></div>
+        </div>
+        <div>
+            <h3>Exercises</h3>
+            <ul id="exerciseList">
+                <p id="messageExerciseListEmpty">You haven't add exercises</p>
+            </ul>
+        </div>
     </section>
+
 </body>
+    <script src="main.js" ></script>
 </html>
