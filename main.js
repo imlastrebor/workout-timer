@@ -91,8 +91,78 @@ function addExercise() {
         const errorMessage = document.createElement('p');
         errorMessage.textContent = 'You need to enter exercise!';
         document.getElementById('messageContainer').appendChild(errorMessage);
-
     }
+
+}
+
+// Variables for timer
+let seconds = 15;
+let milliSeconds = 0;
+
+let isPaused = true;
+
+
+// function that runs timer after every 10 milliseconds if timer is not paused
+const timerInterval = setInterval(() => {
+    if(!isPaused) {
+        timer();
+        if (seconds <= 0) {
+            clearInterval(timerInterval);
+        }
+    }
+}, 10);
+
+
+// Timer function
+function timer() {
+
+    // Remove 1 millisecond
+    milliSeconds -= 1;
+    
+    // When milliseconds hit 0 remove 1 second and set milliseconds to 99
+    if (milliSeconds <= 0) {
+        seconds--;
+        milliSeconds = 99;
+    }
+
+    // Add time to html element
+    // Checking when timer goes under 10 seconds and add leading 0 to seconds
+    if (seconds > 9) {
+        document.getElementById('timer').innerHTML = `${seconds}:${milliSeconds}`;
+    } else {
+        document.getElementById('timer').innerHTML = `0${seconds}:${milliSeconds}`;
+    }
+
+    // Take action when timer is done
+    if (seconds <= 0) {
+        document.getElementById('timer').innerHTML = `Workout done!`;
+    }
+    
+}
+
+
+// Start timer function
+function start() {
+    
+    if (document.getElementById('timer').innerHTML === `Timer ended!`) {
+        seconds = 10;
+    }
+    isPaused = false;
+
+}
+
+
+
+// Pause timer function
+function pause() {
+    isPaused = true;
+}
+
+
+// End timer function
+function end() {
+    clearInterval(timerInterval);
+    document.getElementById('timer').innerHTML = `Timer ended!`;
 }
 
 
