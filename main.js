@@ -96,21 +96,19 @@ function addExercise() {
 }
 
 // Variables for timer
-let seconds = 15;
+let seconds = 5;
 let milliSeconds = 0;
 
 let isPaused = true;
+let isEnded = false;
 
 
 // function that runs timer after every 10 milliseconds if timer is not paused
 const timerInterval = setInterval(() => {
-    if(!isPaused) {
-        timer();
-        if (seconds <= 0) {
-            clearInterval(timerInterval);
+        if(!isPaused) {
+            timer();
         }
-    }
-}, 10);
+    }, 10);
 
 
 // Timer function
@@ -135,6 +133,8 @@ function timer() {
 
     // Take action when timer is done
     if (seconds <= 0) {
+        isPaused = true;
+        isEnded = true;
         document.getElementById('timer').innerHTML = `Workout done!`;
     }
     
@@ -143,26 +143,26 @@ function timer() {
 
 // Start timer function
 function start() {
-    
-    if (document.getElementById('timer').innerHTML === `Timer ended!`) {
+    if (isEnded) {
         seconds = 10;
     }
-    isPaused = false;
-
+    if(isPaused) {
+        isPaused = false;
+    }
 }
-
 
 
 // Pause timer function
 function pause() {
-    isPaused = true;
+    if(!isPaused) {
+        isPaused = true;
+    }
 }
 
 
 // End timer function
 function end() {
-    clearInterval(timerInterval);
+    isPaused = true;
+    isEnded = true;
     document.getElementById('timer').innerHTML = `Timer ended!`;
 }
-
-
