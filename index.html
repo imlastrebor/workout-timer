@@ -11,10 +11,16 @@
     <h1>Workout Timer</h1>
     <section>
         <div>
-            <label for="activeTime">Active time</label>
-            <input type="text" id="activeTime" value="00:40">
-            <label for="restTime">Rest time</label>
-            <input type="text" id="restTime" value="00:20">
+            <div class="input-wrapper">
+                <label for="activeTime">Active time</label>
+                <p id="activeTimeHint" >Add time in seconds</p>
+                <input type="number" id="activeTime" aria-describedby="activeTimeHint">
+            </div>
+            <div class="input-wrapper">    
+                <label for="restTime">Rest time</label>
+                <p id="restTimeHint" >Add time in seconds</p>
+                <input type="number" id="restTime" aria-describedby="restTimeHint">
+            </div>
         </div>
         <p id="timer" ></p>
         <div>

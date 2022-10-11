@@ -96,23 +96,43 @@ function addExercise() {
 }
 
 // Variables for timer
-let seconds = 5;
+let seconds = 0;
 let milliSeconds = 0;
+
+let activeTimePhase = false;
+let activeTimeInSeconds = 0;
+
+let restTimePhase = false;
+let restTimeInSeconds = 0;
+
+let currentPhase;
 
 let isPaused = true;
 let isEnded = false;
 
 
-// function that runs timer after every 10 milliseconds if timer is not paused
-const timerInterval = setInterval(() => {
-        if(!isPaused) {
-            timer();
-        }
-    }, 10);
+
+const activeTime = document.getElementById('activeTime')
+activeTime.addEventListener('change', setActiveTime)
+
+function setActiveTime() {
+    activeTimeInSeconds = activeTime.value;
+    console.log(activeTimeInSeconds);
+}
+
+const restTime = document.getElementById('restTime');
+restTime.addEventListener('change', setRestTime);
+
+function setRestTime() {
+    restTimeInSeconds = restTime.value;
+    console.log(restTimeInSeconds);
+}
 
 
 // Timer function
 function timer() {
+
+console.log(seconds);
 
     // Remove 1 millisecond
     milliSeconds -= 1;
@@ -132,7 +152,7 @@ function timer() {
     }
 
     // Take action when timer is done
-    if (seconds <= 0) {
+    if (seconds <= -1 ) {
         isPaused = true;
         isEnded = true;
         document.getElementById('timer').innerHTML = `Workout done!`;
@@ -143,12 +163,34 @@ function timer() {
 
 // Start timer function
 function start() {
-    if (isEnded) {
-        seconds = 10;
+
+    console.log('active phase ' + activeTimePhase);
+    console.log('rest phase ' + restTimePhase);
+    console.log('seconds ' + seconds);
+    
+    if(!activeTimePhase && !restTimePhase) {
+        activeTimePhase = true;
+        console.log('seconds set to active seconds');
+        seconds = activeTimeInSeconds;
     }
-    if(isPaused) {
-        isPaused = false;
+
+
+    if (activeTime.value == '') {
+        document.getElementById('activeTimeHint').innerHTML = `You must add active time!`;
+    } else if (restTime.value == '') {
+        document.getElementById('restTimeHint').innerHTML = `You must add rest time!`;
+    } else {
+        if (isEnded) {
+            seconds = activeTimeInSeconds;
+            milliSeconds = 0;
+            isEnded = false;
+        }
+        if (isPaused) {
+            isPaused = false;
+
+        }
     }
+
 }
 
 
@@ -166,3 +208,11 @@ function end() {
     isEnded = true;
     document.getElementById('timer').innerHTML = `Timer ended!`;
 }
+
+
+// function that runs timer after every 10 milliseconds if timer is not paused
+const timerInterval = setInterval(() => {
+    if(!isPaused) {
+        timer();
+    }
+}, 10);
