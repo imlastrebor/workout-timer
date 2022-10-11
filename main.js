@@ -3,6 +3,23 @@
 let exerciseList = [];
 
 
+// Function that creates error messages
+function displayError(messageTargetId, errMessage) {
+    document.getElementById(messageTargetId).innerHTML = errMessage;
+}
+
+// Validation
+function validateInput(validationId, messageTargetId, message) {
+
+    if (document.getElementById(validationId).value == '') {
+        document.getElementById(messageTargetId).innerHTML = message;
+    } else {
+        document.getElementById(messageTargetId).innerHTML = '';
+    }
+
+}
+
+
 function exercisesToList() {
 
     // Export items froms array and add items as li element to exerciseList
@@ -84,6 +101,131 @@ function addExercise() {
 
     } else {
 
+        
+        validateInput('exercises', 'messageContainer', 'You need to enter exercise!!!11')
+        
+        /*
+        Tulisiko validation funktion ottaa mallia tästä?
+        - Nyt HTML:n sekaan on määritelty tyhjiä p -elementtejä.
+        - Tulisiko ne lisätä ja poistaa aina tarpeen mukaan? 
+        
+        // Empty error message
+        document.getElementById('messageContainer').innerHTML = '';
+        
+        // Create new p element for error message and add it to errorMessageContainer
+        const errorMessage = document.createElement('p');
+        errorMessage.textContent = 'You need to enter exercise!';
+        document.getElementById('messageContainer').appendChild(errorMessage);
+        */
+
+    } 
+
+}
+
+
+
+
+
+
+// Variables for timer
+let seconds;
+let milliSeconds = 0;
+
+let activeTimePhase = false;
+let activeTimeInSeconds = 0;
+
+let restTimePhase = false;
+let restTimeInSeconds = 0;
+
+let currentPhase = 'active'
+
+let isPaused = true;
+let isEnded = false;
+
+
+
+const activeTime = document.getElementById('activeTime')
+activeTime.addEventListener('change', setActiveTime)
+
+function setActiveTime() {
+    activeTimeInSeconds = activeTime.value;
+    console.log(activeTimeInSeconds);
+}
+
+const restTime = document.getElementById('restTime');
+restTime.addEventListener('change', setRestTime);
+
+function setRestTime() {
+    restTimeInSeconds = restTime.value;
+    console.log(restTimeInSeconds);
+}
+
+
+// Timer function
+function timer() {
+
+console.log("seconds: " + seconds);
+
+    // Remove 1 millisecond
+    milliSeconds -= 1;
+    
+    // When milliseconds hit 0 remove 1 second and set milliseconds to 99
+    if (milliSeconds <= 0) {
+        seconds--;
+        milliSeconds = 99;
+    }
+
+    // Add time to html element
+    // Checking when timer goes under 10 seconds and add leading 0 to seconds
+    if (seconds > 9) {
+        document.getElementById('timer').innerHTML = `${seconds}:${milliSeconds}`;
+    } else {
+        document.getElementById('timer').innerHTML = `0${seconds}:${milliSeconds}`;
+    }
+
+    // Take action when timer is done
+    if (seconds <= -1) {
+
+        isPaused = true;
+
+            if (currentPhase === 'active') {
+                document.getElementById('timer').innerHTML = `Workout done! Time to rest`;
+                // If current phase is active lets change the it to rest    
+                currentPhase = 'rest';
+                console.log(`current phase changed to ${currentPhase}`);
+                
+                // Set up seconds to rest seconds and reset milliseconds    
+                seconds = restTimeInSeconds;
+                milliSeconds = 0;
+                setTimeout(() => {
+                    // Set value for isPaused to false so timer starts running
+                    isPaused = false;
+                }, "2000")
+            }
+
+            else if (currentPhase === 'rest') {
+                document.getElementById('timer').innerHTML = `Rest done! Get ready for next excercise.`;
+                // If current phase is rest lets change the it to active
+                currentPhase = 'active';
+                console.log(`current phase changed to ${currentPhase}`);
+
+                // Set up seconds to active seconds and reset milliseconds
+                seconds = activeTimeInSeconds;
+                milliSeconds = 0;
+                
+                setTimeout(() => {
+                    // Set value for isPaused to false so timer starts running
+                    isPaused = false;
+                }, "2000")
+            }
+
+    }
+    
+}
+
+
+/*
+
         // Empty error message
         document.getElementById('messageContainer').innerHTML = '';
         
@@ -92,7 +234,63 @@ function addExercise() {
         errorMessage.textContent = 'You need to enter exercise!';
         document.getElementById('messageContainer').appendChild(errorMessage);
 
+
+*/
+
+
+// Start timer function
+function start() {
+
+    validateInput('activeTime', 'activeTimeError', 'You must add active time!');
+    validateInput('restTime', 'restTimeError', 'You must add rest time!');
+
+    if (activeTime.value == '') {
+        return;
+    } else if (restTime.value == '') {
+        return;
+    } else {
+
+        if (isEnded) {
+            seconds = activeTimeInSeconds;
+            milliSeconds = 0;
+            currentPhase = 'active';
+            isEnded = false;
+        }
+        if (isPaused) {
+            if (currentPhase === 'active' && seconds === undefined) {
+                seconds = activeTimeInSeconds;
+            }
+            isPaused = false;
+            console.log('Timer started');
+            console.log("paused: " + isPaused);
+            console.log("current phase: " + currentPhase);
+        }
     }
 }
 
 
+// Pause timer function
+function pause() {
+    if(!isPaused) {
+        isPaused = true;
+        console.log('Timer paused');
+        console.log("paused: " + isPaused);
+        console.log("current phase: " + currentPhase);
+    }
+}
+
+
+// End timer function
+function end() {
+    isPaused = true;
+    isEnded = true;
+    document.getElementById('timer').innerHTML = `Timer ended!`;
+}
+
+
+// Function that runs timer after every 10 milliseconds if timer is not paused
+const timerInterval = setInterval(() => {
+    if(!isPaused) {
+        timer();
+    }
+}, 10);

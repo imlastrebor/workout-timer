@@ -11,16 +11,24 @@
     <h1>Workout Timer</h1>
     <section>
         <div>
-            <label for="activeTime">Active time</label>
-            <input type="text" id="activeTime" value="00:40">
-            <label for="restTime">Rest time</label>
-            <input type="text" id="restTime" value="00:20">
+            <div class="input-wrapper">
+                <label for="activeTime">Active time</label>
+                <p id="activeTimeHint">Add time in seconds</p>
+                <p id="activeTimeError"></p>
+                <input type="number" id="activeTime" aria-describedby="activeTimeHint">
+            </div>
+            <div class="input-wrapper">    
+                <label for="restTime">Rest time</label>
+                <p id="restTimeHint">Add time in seconds</p>
+                <p id="restTimeError"></p>
+                <input type="number" id="restTime" aria-describedby="restTimeHint">
+            </div>
         </div>
-        <div>00:00</div>
+        <p id="timer" ></p>
         <div>
-            <button>Start</button>
-            <button>Pause</button>
-            <button>End</button>
+            <button onclick="start()">Start</button>
+            <button onclick="pause()">Pause</button>
+            <button onclick="end()">End</button>
         </div>
     </section>
     <section>
@@ -28,7 +36,7 @@
             <label for="exercises">Exercises</label>
             <input type="text" id="exercises" placeholder="Exercise name">
             <button onclick="addExercise()">Add exercise</button>
-            <div id="messageContainer"></div>
+            <p id="messageContainer"></p>
         </div>
         <div>
             <h3>Exercises</h3>
