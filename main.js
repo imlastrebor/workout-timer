@@ -3,6 +3,23 @@
 let exerciseList = [];
 
 
+// Function that creates error messages
+function displayError(messageTargetId, errMessage) {
+    document.getElementById(messageTargetId).innerHTML = errMessage;
+}
+
+// Validation
+function validateInput(validationId, messageTargetId, message) {
+
+    if (document.getElementById(validationId).value == '') {
+        document.getElementById(messageTargetId).innerHTML = message;
+    } else {
+        document.getElementById(messageTargetId).innerHTML = '';
+    }
+
+}
+
+
 function exercisesToList() {
 
     // Export items froms array and add items as li element to exerciseList
@@ -84,6 +101,14 @@ function addExercise() {
 
     } else {
 
+        
+        validateInput('exercises', 'messageContainer', 'You need to enter exercise!!!11')
+        
+        /*
+        Tulisiko validation funktion ottaa mallia tästä?
+        - Nyt HTML:n sekaan on määritelty tyhjiä p -elementtejä.
+        - Tulisiko ne lisätä ja poistaa aina tarpeen mukaan? 
+        
         // Empty error message
         document.getElementById('messageContainer').innerHTML = '';
         
@@ -91,9 +116,16 @@ function addExercise() {
         const errorMessage = document.createElement('p');
         errorMessage.textContent = 'You need to enter exercise!';
         document.getElementById('messageContainer').appendChild(errorMessage);
-    }
+        */
+
+    } 
 
 }
+
+
+
+
+
 
 // Variables for timer
 let seconds;
@@ -192,13 +224,30 @@ console.log("seconds: " + seconds);
 }
 
 
+/*
+
+        // Empty error message
+        document.getElementById('messageContainer').innerHTML = '';
+        
+        // Create new p element for error message and add it to errorMessageContainer
+        const errorMessage = document.createElement('p');
+        errorMessage.textContent = 'You need to enter exercise!';
+        document.getElementById('messageContainer').appendChild(errorMessage);
+
+
+*/
+
+
 // Start timer function
 function start() {
 
+    validateInput('activeTime', 'activeTimeError', 'You must add active time!');
+    validateInput('restTime', 'restTimeError', 'You must add rest time!');
+
     if (activeTime.value == '') {
-        document.getElementById('activeTimeHint').innerHTML = `You must add active time!`;
+        return;
     } else if (restTime.value == '') {
-        document.getElementById('restTimeHint').innerHTML = `You must add rest time!`;
+        return;
     } else {
 
         if (isEnded) {
