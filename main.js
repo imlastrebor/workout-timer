@@ -77,6 +77,7 @@ function deleteExercise(e) {
     
 }
 
+
 function addExercise() {
     
     // Check is the input field filled
@@ -101,8 +102,7 @@ function addExercise() {
 
     } else {
 
-        
-        validateInput('exercises', 'messageContainer', 'You need to enter exercise!!!11')
+        validateInput('exercises', 'messageContainer', 'You need to enter exercise!')
         
         /*
         Tulisiko validation funktion ottaa mallia tästä?
@@ -123,10 +123,6 @@ function addExercise() {
 }
 
 
-
-
-
-
 // Variables for timer
 let seconds;
 let milliSeconds = 0;
@@ -141,7 +137,6 @@ let currentPhase = 'active'
 
 let isPaused = true;
 let isEnded = false;
-
 
 
 const activeTime = document.getElementById('activeTime')
@@ -222,20 +217,6 @@ console.log("seconds: " + seconds);
     }
     
 }
-
-
-/*
-
-        // Empty error message
-        document.getElementById('messageContainer').innerHTML = '';
-        
-        // Create new p element for error message and add it to errorMessageContainer
-        const errorMessage = document.createElement('p');
-        errorMessage.textContent = 'You need to enter exercise!';
-        document.getElementById('messageContainer').appendChild(errorMessage);
-
-
-*/
 
 
 // Start timer function
