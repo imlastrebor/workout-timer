@@ -105,7 +105,7 @@ let activeTimeInSeconds = 0;
 let restTimePhase = false;
 let restTimeInSeconds = 0;
 
-let currentPhase;
+let currentPhase = 'active'
 
 let isPaused = true;
 let isEnded = false;
@@ -132,7 +132,7 @@ function setRestTime() {
 // Timer function
 function timer() {
 
-console.log(seconds);
+console.log("seconds: " + seconds);
 
     // Remove 1 millisecond
     milliSeconds -= 1;
@@ -152,28 +152,58 @@ console.log(seconds);
     }
 
     // Take action when timer is done
-    if (seconds <= -1 ) {
-        isPaused = true;
-        isEnded = true;
-        document.getElementById('timer').innerHTML = `Workout done!`;
+    if (seconds <= -1) {
+        running.objProperty = false;
+
+
+
+            
+            if (currentPhase === 'active') {
+                document.getElementById('timer').innerHTML = `Workout done! Time to rest`;
+                // If current phase is active lets change the it to rest    
+                currentPhase = 'rest';
+                console.log(`current phase changed to ${currentPhase}`);
+                
+                // Set up seconds to rest seconds and reset milliseconds    
+                seconds = restTimeInSeconds;
+                milliSeconds = 0;
+                setTimeout(() => {
+                    // Set value for running to true so timer is running
+                    running.objProperty = true;
+                }, "2000")
+            }
+
+
+
+            else if (currentPhase === 'rest') {
+                document.getElementById('timer').innerHTML = `Rest done! Get ready for next excercise.`;
+                // If current phase is rest lets change the it to active
+                currentPhase = 'active';
+                console.log(`current phase changed to ${currentPhase}`);
+
+                // Set up seconds to active seconds and reset milliseconds
+                seconds = activeTimeInSeconds;
+                milliSeconds = 0;
+                
+                setTimeout(() => {
+                    // Set value for running to true so timer is running
+                    running.objProperty = true;
+                }, "2000")
+            }
+
     }
     
 }
 
 
+
+
+
+
 // Start timer function
 function start() {
 
-    console.log('active phase ' + activeTimePhase);
-    console.log('rest phase ' + restTimePhase);
     console.log('seconds ' + seconds);
-    
-    if(!activeTimePhase && !restTimePhase) {
-        activeTimePhase = true;
-        console.log('seconds set to active seconds');
-        seconds = activeTimeInSeconds;
-    }
-
 
     if (activeTime.value == '') {
         document.getElementById('activeTimeHint').innerHTML = `You must add active time!`;
@@ -185,34 +215,81 @@ function start() {
             milliSeconds = 0;
             isEnded = false;
         }
-        if (isPaused) {
-            isPaused = false;
-
+        if (running.objProperty === false) {
+            // running.prop is related to testing variable change monitoring
+            running.objProperty = true;
+            console.log("running: " + running.objProperty);
         }
     }
-
 }
 
 
 // Pause timer function
 function pause() {
-    if(!isPaused) {
-        isPaused = true;
+    if(running.objProperty === true) {
+        // running.prop is related to testing variable change monitoring
+        running.objProperty = false;
+        console.log("running: " + running.objProperty);
     }
 }
 
 
 // End timer function
 function end() {
-    isPaused = true;
+    // running.prop is related to testing variable change monitoring
+    running.objProperty = false;
     isEnded = true;
     document.getElementById('timer').innerHTML = `Timer ended!`;
 }
 
 
+//!!!!!!
+// Testing function that would run every time if variable is changed
+//!!!!!!
+
+console.log("current phase: " + currentPhase);
+
+const running = {};
+
+let value = false;
+console.log("value: " + value);
+
+function fn(oldValue, newValue) {
+    
+    if (newValue === true) {
+        console.log("Timer started");
+
+        if (currentPhase === 'active' && seconds === 0) {
+            seconds = activeTimeInSeconds;
+        }
+        
+
+    }
+    if (newValue === false) {
+        
+        console.log("Timer stopped");
+
+    }
+
+    console.log("seconds after: " + seconds);
+    console.log("current phase: " + currentPhase);
+
+}
+
+Object.defineProperty(running, "objProperty", {
+    get() {
+        return value
+    },
+    set(val) {
+        fn(value, val);
+        value = val;
+    }
+});
+
+
 // function that runs timer after every 10 milliseconds if timer is not paused
 const timerInterval = setInterval(() => {
-    if(!isPaused) {
+    if(value === true) {
         timer();
     }
 }, 10);
