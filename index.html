@@ -4,32 +4,48 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="main.js"></script>
+    
     <title>Workout Timer</title>
 </head>
 <body>
     <h1>Workout Timer</h1>
     <section>
         <div>
-            <label for="activeTime">Active time</label>
-            <input type="text" id="activeTime" value="00:40">
-            <label for="restTime">Rest time</label>
-            <input type="text" id="restTime" value="00:20">
+            <div class="input-wrapper">
+                <label for="activeTime">Active time</label>
+                <p id="activeTimeHint">Add time in seconds</p>
+                <p id="activeTimeError"></p>
+                <input type="number" id="activeTime" aria-describedby="activeTimeHint">
+            </div>
+            <div class="input-wrapper">    
+                <label for="restTime">Rest time</label>
+                <p id="restTimeHint">Add time in seconds</p>
+                <p id="restTimeError"></p>
+                <input type="number" id="restTime" aria-describedby="restTimeHint">
+            </div>
         </div>
-        <div>00:00</div>
+        <p id="timer" ></p>
         <div>
-            <button>Start</button>
-            <button>Pause</button>
-            <button>End</button>
+            <button onclick="start()">Start</button>
+            <button onclick="pause()">Pause</button>
+            <button onclick="end()">End</button>
         </div>
     </section>
     <section>
-        <label for="exercises">Exercises</label>
-        <input type="text" id="exercises">
-        <ul>
-            <li>List item 1</li>
-            <li>List item 2</li>
-        </ul>
+        <div>
+            <label for="exercises">Exercises</label>
+            <input type="text" id="exercises" placeholder="Exercise name">
+            <button onclick="addExercise()">Add exercise</button>
+            <p id="messageContainer"></p>
+        </div>
+        <div>
+            <h3>Exercises</h3>
+            <ul id="exerciseList">
+                <p>You haven't add any exercises</p>
+            </ul>
+        </div>
     </section>
+
 </body>
+    <script src="main.js" ></script>
 </html>
