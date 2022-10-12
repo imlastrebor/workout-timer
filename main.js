@@ -69,6 +69,8 @@ function deleteExercise(e) {
         // Adds p element to ul
         document.getElementById('exerciseList').appendChild(messageExerciseListEmpty);
     }
+
+    console.log(exerciseList);
     
 }
 
@@ -94,6 +96,18 @@ function addExercise() {
 
         // Empty input field
         exerciseInput.value = '';
+
+        // Testings for li element activation
+            console.log(exerciseList);
+
+
+            console.log("length: " +  (document.getElementById('exerciseList').getElementsByTagName('li').length - 1));
+
+            //console.log(document.getElementById('exerciseList'));
+            //console.log(document.getElementById('exerciseList').getElementsByTagName('li'));
+            console.log(document.getElementById('exerciseList').getElementsByTagName('li')[0]);
+
+document
 
     } else {
 
@@ -151,10 +165,15 @@ function setRestTime() {
 }
 
 
+// Active exercise indicator
+const activeIndicator = 'ACTIVE EXERCISE'
+const activeElement = document.createElement('p');
+activeElement.textContent = activeIndicator;
+
+let index = 0;
+
 // Timer function
 function timer() {
-
-    console.log("seconds: " + seconds);
 
     // Remove 1 millisecond
     milliSeconds -= 1;
@@ -173,7 +192,7 @@ function timer() {
         document.getElementById('timer').innerHTML = `0${seconds}:${milliSeconds}`;
     }
 
-    // Take action when timer is done
+    // Take action when timer phase is done
     if (seconds <= -1) {
 
         isPaused = true;
@@ -190,7 +209,7 @@ function timer() {
                 setTimeout(() => {
                     // Set value for isPaused to false so timer starts running
                     isPaused = false;
-                }, "2000")
+                }, "1000")
             }
 
             else if (currentPhase === 'rest') {
@@ -199,6 +218,17 @@ function timer() {
                 currentPhase = 'active';
                 console.log(`current phase changed to ${currentPhase}`);
 
+                
+                // Set next exercise active
+                // Check if index grows bigger than list has items return it to starting position
+                if (document.getElementById('exerciseList').getElementsByTagName('li').length <= (index + 1)) {
+                    index = -1;
+                }
+                // Bump up the index
+                index++;
+                // Add active indicator into the element
+                document.getElementById('exerciseList').getElementsByTagName('li')[index].appendChild(activeElement);
+
                 // Set up seconds to active seconds and reset milliseconds
                 seconds = activeTimeInSeconds;
                 milliSeconds = 0;
@@ -206,7 +236,7 @@ function timer() {
                 setTimeout(() => {
                     // Set value for isPaused to false so timer starts running
                     isPaused = false;
-                }, "2000")
+                }, "1000")
             }
 
     }
@@ -232,12 +262,19 @@ function start() {
             isEnded = false;
         }
         if (isPaused) {
+            // Check if timer is used first time
             if (currentPhase === 'active' && seconds === undefined) {
+
                 seconds = activeTimeInSeconds;
+                
+                if (document.getElementById('exerciseList').getElementsByTagName('li').length > 0) {
+                    // Activating first exercise from the list
+                    document.getElementById('exerciseList').getElementsByTagName('li')[0].appendChild(activeElement);                    
+                }
+                
             }
             isPaused = false;
             console.log('Timer started');
-            console.log("paused: " + isPaused);
             console.log("current phase: " + currentPhase);
         }
     }
@@ -249,7 +286,6 @@ function pause() {
     if(!isPaused) {
         isPaused = true;
         console.log('Timer paused');
-        console.log("paused: " + isPaused);
         console.log("current phase: " + currentPhase);
     }
 }
