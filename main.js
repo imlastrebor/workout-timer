@@ -3,11 +3,6 @@
 let exerciseList = [];
 
 
-// Function that creates error messages
-function displayError(messageTargetId, errMessage) {
-    document.getElementById(messageTargetId).innerHTML = errMessage;
-}
-
 // Validation
 function validateInput(validationId, messageTargetId, message) {
 
@@ -159,7 +154,7 @@ function setRestTime() {
 // Timer function
 function timer() {
 
-console.log("seconds: " + seconds);
+    console.log("seconds: " + seconds);
 
     // Remove 1 millisecond
     milliSeconds -= 1;
@@ -230,7 +225,6 @@ function start() {
     } else if (restTime.value == '') {
         return;
     } else {
-
         if (isEnded) {
             seconds = activeTimeInSeconds;
             milliSeconds = 0;
