@@ -97,18 +97,6 @@ function addExercise() {
         // Empty input field
         exerciseInput.value = '';
 
-        // Testings for li element activation
-            console.log(exerciseList);
-
-
-            console.log("length: " +  (document.getElementById('exerciseList').getElementsByTagName('li').length - 1));
-
-            //console.log(document.getElementById('exerciseList'));
-            //console.log(document.getElementById('exerciseList').getElementsByTagName('li'));
-            console.log(document.getElementById('exerciseList').getElementsByTagName('li')[0]);
-
-document
-
     } else {
 
         validateInput('exercises', 'messageContainer', 'You need to enter exercise!')
@@ -168,14 +156,19 @@ function setRestTime() {
 // Active exercise indicator
 const activeIndicator = 'ACTIVE EXERCISE'
 const activeElement = document.createElement('p');
+activeElement.setAttribute("id", "activeExercise");
 activeElement.textContent = activeIndicator;
 
 let index = 0;
 
+function createMessage(targetId, message) {
+    document.getElementById(targetId).innerHTML = message;
+}
+
 // Timer function
 function timer() {
 
-    // Remove 1 millisecond
+    // Remove 1 millisecond every time this function runs
     milliSeconds -= 1;
     
     // When milliseconds hit 0 remove 1 second and set milliseconds to 99
@@ -195,48 +188,67 @@ function timer() {
     // Take action when timer phase is done
     if (seconds <= -1) {
 
+        // Set timer to be 00:00 after timer is done.
+        // This is needed because otherwise timer goes minus one millisecond (0-1:99)
+        createMessage('timer', `00:00`);
+
         isPaused = true;
 
             if (currentPhase === 'active') {
-                document.getElementById('timer').innerHTML = `Workout done! Time to rest`;
+                
+                createMessage('timerHeading', `Exercise done!`);
+                //document.getElementById('timer').innerHTML = `Workout done! Time to rest`;
+
                 // If current phase is active lets change the it to rest    
                 currentPhase = 'rest';
-                console.log(`current phase changed to ${currentPhase}`);
                 
                 // Set up seconds to rest seconds and reset milliseconds    
                 seconds = restTimeInSeconds;
                 milliSeconds = 0;
+
                 setTimeout(() => {
-                    // Set value for isPaused to false so timer starts running
-                    isPaused = false;
-                }, "1000")
+                    // If end timer is clicked during timeout timer doesn't start running after timeout ends
+                    if (!isEnded) {    
+                        createMessage('timerHeading', `Time to rest.`);
+                        // Set value for isPaused to false so timer starts running
+                        isPaused = false;
+                    }
+                }, "2000")
             }
 
             else if (currentPhase === 'rest') {
-                document.getElementById('timer').innerHTML = `Rest done! Get ready for next excercise.`;
+
+                createMessage('timerHeading', `Rest done. Get ready!`);
+                //document.getElementById('timer').innerHTML = `Rest done! Get ready for next excercise.`;
                 // If current phase is rest lets change the it to active
                 currentPhase = 'active';
-                console.log(`current phase changed to ${currentPhase}`);
 
-                
                 // Set next exercise active
-                // Check if index grows bigger than list has items return it to starting position
-                if (document.getElementById('exerciseList').getElementsByTagName('li').length <= (index + 1)) {
-                    index = -1;
+                if (document.getElementById('exerciseList').getElementsByTagName('li').length >= 1) {
+
+                    // Check if index grows bigger than list has items return it to starting position
+                    if (document.getElementById('exerciseList').getElementsByTagName('li').length <= (index + 1)) {
+                        index = -1;
+                    }
+                    // Bump up the index
+                    index++;
+                    // Add active indicator into the element
+                    document.getElementById('exerciseList').getElementsByTagName('li')[index].appendChild(activeElement);
+                
                 }
-                // Bump up the index
-                index++;
-                // Add active indicator into the element
-                document.getElementById('exerciseList').getElementsByTagName('li')[index].appendChild(activeElement);
 
                 // Set up seconds to active seconds and reset milliseconds
                 seconds = activeTimeInSeconds;
                 milliSeconds = 0;
                 
                 setTimeout(() => {
-                    // Set value for isPaused to false so timer starts running
-                    isPaused = false;
-                }, "1000")
+                    // If end timer is clicked during timeout timer doesn't start running after timeout ends
+                    if (!isEnded) {    
+                        createMessage('timerHeading', `Keep going on!`);
+                        // Set value for isPaused to false so timer starts running
+                        isPaused = false;
+                    }
+                }, "2000")
             }
 
     }
@@ -255,16 +267,26 @@ function start() {
     } else if (restTime.value == '') {
         return;
     } else {
+        // If timer has been ended and user clicks start
         if (isEnded) {
+            createMessage('timerHeading', `Keep going on!`);
             seconds = activeTimeInSeconds;
             milliSeconds = 0;
             currentPhase = 'active';
+            if (document.getElementById('exerciseList').getElementsByTagName('li').length > 0) {
+                // Activating first exercise from the list
+                document.getElementById('exerciseList').getElementsByTagName('li')[0].appendChild(activeElement);                    
+            }
             isEnded = false;
         }
+        // If timer has been paused and user clicks start
         if (isPaused) {
             // Check if timer is used first time
             if (currentPhase === 'active' && seconds === undefined) {
 
+                createMessage('timerHeading', `Keep going on!`);
+
+                // Set seconds to active time that user has set
                 seconds = activeTimeInSeconds;
                 
                 if (document.getElementById('exerciseList').getElementsByTagName('li').length > 0) {
@@ -273,9 +295,8 @@ function start() {
                 }
                 
             }
+            // Unpause timer
             isPaused = false;
-            console.log('Timer started');
-            console.log("current phase: " + currentPhase);
         }
     }
 }
@@ -283,19 +304,31 @@ function start() {
 
 // Pause timer function
 function pause() {
+    // If timer is not paused
     if(!isPaused) {
+        // Pause timer
         isPaused = true;
-        console.log('Timer paused');
-        console.log("current phase: " + currentPhase);
     }
 }
 
 
 // End timer function
 function end() {
+
+    // Pauses timer
     isPaused = true;
+    // Ends timer
     isEnded = true;
-    document.getElementById('timer').innerHTML = `Timer ended!`;
+
+    // Reset timer text element
+    createMessage('timer', ``);
+    // Reset timer heading text element
+    createMessage('timerHeading', ``);
+    
+    // Removes active indicator 
+    document.getElementById('activeExercise').remove();
+    // Sets index back to 0 so when timer is started it's correct 
+    index = 0;
 }
 
 
