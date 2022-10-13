@@ -1,60 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Workout Timer</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Workout Timer</h1>
     <section>
-        <div>
-            <div class="input-wrapper">
-                <label for="activeTime">Active time</label>
-                <p id="activeTimeHint">Add time in seconds</p>
-                <p id="activeTimeError"></p>
-                <input type="number" id="activeTime" aria-describedby="activeTimeHint">
-            </div>
-            <div class="input-wrapper">    
-                <label for="restTime">Rest time</label>
-                <p id="restTimeHint">Add time in seconds</p>
-                <p id="restTimeError"></p>
-                <input type="number" id="restTime" aria-describedby="restTimeHint">
-            </div>
+      <div>
+        <div class="input-wrapper">
+          <label for="activeTime">Active time</label>
+          <p id="activeTimeHint">Add time in seconds</p>
+          <div id="activeTimeErrorContainer" class="error"></div>
+          <input type="number" id="activeTime" aria-describedby="activeTimeHint" />
         </div>
-        <!--
-            Add new p element which contains text about what's the phase of the timer.
-            Now info replaces timer seconds but instead of that timer should show 00:00.
-            Info text should show above of the timer.
-            There would be 4 different text.
-            Text to show depend on timer phase: workout -> delay after workout -> rest -> delay after rest.
-            For example: "Keep going on!" -> "Well done!" -> "Time to rest" -> "Get ready!".  
-        -->
-        <h4 id="timerHeading"></h4>
-        <p id="timer" ></p>
-        <div>
-            <button onclick="start()">Start</button>
-            <button onclick="pause()">Pause</button>
-            <button onclick="end()">End</button>
+        <div class="input-wrapper">
+          <label for="restTime">Rest time</label>
+          <p id="restTimeHint">Add time in seconds</p>
+          <div id="restTimeErrorContainer" class="error"></div>
+          <input type="number" id="restTime" aria-describedby="restTimeHint" />
         </div>
+      </div>
+      <h4 id="timerHeading"></h4>
+      <p id="timer"></p>
+      <div>
+        <button onclick="start()">Start</button>
+        <button onclick="pause()">Pause</button>
+        <button onclick="end()">End</button>
+      </div>
     </section>
     <section>
-        <div>
-            <label for="exercises">Exercises</label>
-            <input type="text" id="exercises" placeholder="Exercise name">
-            <button onclick="addExercise()">Add exercise</button>
-            <p id="messageContainer"></p>
-        </div>
-        <div>
-            <h3>Exercises</h3>
-            <ul id="exerciseList">
-                <p>You haven't add any exercises</p>
-            </ul>
-        </div>
+      <div>
+        <label for="exercises">Exercises</label>
+        <input type="text" id="exercises" placeholder="Exercise name" />
+        <button onclick="addExercise()">Add exercise</button>
+        <div id="exerciseErrorContainer" class="error"></div>
+        <div id="messageContainer"></div>
+      </div>
+      <div>
+        <h3>Exercises</h3>
+        <ul id="exerciseList">
+          <p>You haven't add any exercises</p>
+        </ul>
+      </div>
     </section>
-
-</body>
-    <script src="main.js" ></script>
+  </body>
+  <script src="main.js"></script>
 </html>
