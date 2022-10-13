@@ -1,11 +1,33 @@
 let exerciseList = [];
 
+function createErrorMessage(messageText, setElementClass, targetId) {
+  // Check is there already error message and if there's not function creates one
+  if (document.getElementById(targetId).querySelector("." + setElementClass) == null) {
+    // Create new p element for error message and add it to target
+    const errorElement = document.createElement("p");
+    errorElement.setAttribute("class", setElementClass);
+    errorElement.textContent = messageText;
+    document.getElementById(targetId).appendChild(errorElement);
+  }
+}
+
+// Function to remove error message
+function removeErrorMessage(errorMessageClassName, targetId) {
+  // Select all elements with specific class name
+  const elementToDelete = document.getElementById(targetId).querySelectorAll("." + errorMessageClassName);
+  // Run remove for each selected element
+  elementToDelete.forEach((element) => {
+    element.remove();
+  });
+  //document.getElementsByClassName(elementId).remove();
+}
+
 // Validation
-function validateInput(validationId, messageTargetId, message) {
-  if (document.getElementById(validationId).value == "") {
-    document.getElementById(messageTargetId).innerHTML = message;
+function validateInput(validationTargetId, messageText, messageTargetClass, elementId) {
+  if (document.getElementById(validationTargetId).value == "") {
+    createErrorMessage(messageText, elementId, messageTargetClass);
   } else {
-    document.getElementById(messageTargetId).innerHTML = "";
+    removeErrorMessage(elementId, messageTargetClass);
   }
 }
 
@@ -59,11 +81,14 @@ function deleteExercise(e) {
 }
 
 function addExercise() {
-  // Check is the input field filled
-  if (document.getElementById("exercises").value != "") {
-    // Empty ul and errorMessage
+  validateInput("exercises", "Add exercises name", "exerciseErrorContainer", "exerciseError");
+  // Check is errors displayd
+  if (document.querySelectorAll(".exerciseError").length == 0) {
+    // Empty ul
     document.getElementById("exerciseList").innerHTML = "";
-    document.getElementById("messageContainer").innerHTML = "";
+
+    // Removes error message element from HTML
+    //removeErrorMessage("exerciseError");
 
     // Get the exercise name from input field
     const exerciseInput = document.getElementById("exercises");
@@ -76,22 +101,6 @@ function addExercise() {
 
     // Empty input field
     exerciseInput.value = "";
-  } else {
-    validateInput("exercises", "messageContainer", "You need to enter exercise!");
-
-    /*
-        Tulisiko validation funktion ottaa mallia tästä?
-        - Nyt HTML:n sekaan on määritelty tyhjiä p -elementtejä.
-        - Tulisiko ne lisätä ja poistaa aina tarpeen mukaan? 
-        
-        // Empty error message
-        document.getElementById('messageContainer').innerHTML = '';
-        
-        // Create new p element for error message and add it to errorMessageContainer
-        const errorMessage = document.createElement('p');
-        errorMessage.textContent = 'You need to enter exercise!';
-        document.getElementById('messageContainer').appendChild(errorMessage);
-        */
   }
 }
 
@@ -218,23 +227,12 @@ function timer() {
 
 // Start timer function
 function start() {
-  validateInput("activeTime", "activeTimeError", "You must add active time!");
-  validateInput("restTime", "restTimeError", "You must add rest time!");
+  // Validations for inputs
+  validateInput("activeTime", "You must add active time!", "activeTimeErrorContainer", "timeError");
+  validateInput("restTime", "You must add rest time!", "restTimeErrorContainer", "timeError");
 
-  // Testing how to spot if error messages are displayd
-  /* 
-  if (condition) {
-    console.log("Errors found. Fix them before you can continue.");
-  }
-  */
-
-  console.log("Error length: " + document.getElementsByClassName("error").length);
-
-  if (activeTime.value == "") {
-    return;
-  } else if (restTime.value == "") {
-    return;
-  } else {
+  // Check if error messages are displayd. If not run timer.
+  if (document.querySelectorAll(".timeError").length == 0) {
     // If timer has been ended and user clicks start
     if (isEnded) {
       createMessage("timerHeading", `Keep going on!`);

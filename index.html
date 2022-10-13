@@ -14,24 +14,16 @@
         <div class="input-wrapper">
           <label for="activeTime">Active time</label>
           <p id="activeTimeHint">Add time in seconds</p>
-          <p id="activeTimeError" class="error"></p>
+          <div id="activeTimeErrorContainer" class="error"></div>
           <input type="number" id="activeTime" aria-describedby="activeTimeHint" />
         </div>
         <div class="input-wrapper">
           <label for="restTime">Rest time</label>
           <p id="restTimeHint">Add time in seconds</p>
-          <p id="restTimeError" class="error"></p>
+          <div id="restTimeErrorContainer" class="error"></div>
           <input type="number" id="restTime" aria-describedby="restTimeHint" />
         </div>
       </div>
-      <!--
-            Add new p element which contains text about what's the phase of the timer.
-            Now info replaces timer seconds but instead of that timer should show 00:00.
-            Info text should show above of the timer.
-            There would be 4 different text.
-            Text to show depend on timer phase: workout -> delay after workout -> rest -> delay after rest.
-            For example: "Keep going on!" -> "Well done!" -> "Time to rest" -> "Get ready!".  
-        -->
       <h4 id="timerHeading"></h4>
       <p id="timer"></p>
       <div>
@@ -45,7 +37,8 @@
         <label for="exercises">Exercises</label>
         <input type="text" id="exercises" placeholder="Exercise name" />
         <button onclick="addExercise()">Add exercise</button>
-        <p id="messageContainer"></p>
+        <div id="exerciseErrorContainer" class="error"></div>
+        <div id="messageContainer"></div>
       </div>
       <div>
         <h3>Exercises</h3>
