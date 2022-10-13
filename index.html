@@ -4,20 +4,21 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
 
     <title>Workout Timer</title>
   </head>
   <body>
     <h1>Workout Timer</h1>
-    <section>
+    <section id="timerSetup">
       <div>
-        <div class="input-wrapper">
+        <div class="inputWrapper">
           <label for="activeTime">Active time</label>
           <p id="activeTimeHint">Add time in seconds</p>
           <div id="activeTimeErrorContainer" class="error"></div>
           <input type="number" id="activeTime" aria-describedby="activeTimeHint" />
         </div>
-        <div class="input-wrapper">
+        <div class="inputWrapper">
           <label for="restTime">Rest time</label>
           <p id="restTimeHint">Add time in seconds</p>
           <div id="restTimeErrorContainer" class="error"></div>
@@ -26,19 +27,17 @@
       </div>
       <h4 id="timerHeading"></h4>
       <p id="timer"></p>
-      <div>
-        <button onclick="start()">Start</button>
-        <button onclick="pause()">Pause</button>
-        <button onclick="end()">End</button>
-      </div>
     </section>
     <section>
-      <div>
+      <div class="inputWrapper">
         <label for="exercises">Exercises</label>
         <input type="text" id="exercises" placeholder="Exercise name" />
         <button onclick="addExercise()">Add exercise</button>
         <div id="exerciseErrorContainer" class="error"></div>
         <div id="messageContainer"></div>
+      </div>
+      <div id="timerControls">
+        <button onclick="start()">Start</button>
       </div>
       <div>
         <h3>Exercises</h3>
