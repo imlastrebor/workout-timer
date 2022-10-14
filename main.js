@@ -1,5 +1,54 @@
 let exerciseList = [];
 
+// Select specific elements by existing class and add new class
+function setClassForElement(elementSelector, classNameToAdd, classToRemove) {
+  const elements = document.querySelectorAll(elementSelector);
+  // Add class for each selected element
+  elements.forEach((element) => {
+    element.classList.add(classNameToAdd);
+    element.classList.remove(classToRemove);
+  });
+}
+
+// When timer is running show this UI
+let settingsUiOn = false;
+function timerSettingsUi() {
+  settingsUiOn = true;
+  runningUiOn = false;
+  console.log("timer is ended");
+  document.getElementById("pause").remove();
+  document.getElementById("end").remove();
+
+  // Show inputs
+  setClassForElement(".inputWrapper", "visible", "hidden");
+}
+
+// Create button
+function createButton(setElementClass, setElementId, buttonText, targetId) {
+  const button = document.createElement("button");
+  button.setAttribute("class", setElementClass);
+  button.setAttribute("id", setElementId);
+  button.textContent = buttonText;
+  document.getElementById(targetId).appendChild(button);
+}
+
+// When timer is running show this UI
+let runningUiOn = false;
+function timerRunningUi() {
+  runningUiOn = true;
+  settingsUiOn = false;
+
+  // Add timer control buttons
+  createButton("button", "pause", "Pause", "timerControls");
+  document.getElementById("pause").setAttribute("onclick", "pause()");
+  createButton("button", "end", "End", "timerControls");
+  document.getElementById("end").setAttribute("onclick", "end()");
+
+  // Hide inputs
+  setClassForElement(".inputWrapper", "hidden", "visible");
+}
+
+// Function creates error message
 function createErrorMessage(messageText, setElementClass, targetId) {
   // Check is there already error message and if there's not function creates one
   if (document.getElementById(targetId).querySelector("." + setElementClass) == null) {
@@ -260,6 +309,11 @@ function start() {
           document.getElementById("exerciseList").getElementsByTagName("li")[0].appendChild(activeElement);
         }
       }
+      if (runningUiOn === false) {
+        // Add timer running UI
+        timerRunningUi();
+      }
+
       // Unpause timer
       isPaused = false;
     }
@@ -277,6 +331,11 @@ function pause() {
 
 // End timer function
 function end() {
+  // Add timer setting UI
+  if (settingsUiOn === false) {
+    timerSettingsUi();
+  }
+
   // Pauses timer
   isPaused = true;
   // Ends timer
