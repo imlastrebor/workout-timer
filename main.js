@@ -1,4 +1,4 @@
-let exerciseList = [];
+let exerciseArray = [];
 
 // Variables for timer
 let seconds;
@@ -14,6 +14,8 @@ let currentPhase = "active";
 
 let isPaused = true;
 let isEnded = false;
+
+const exerciseList = document.getElementById("exerciseList");
 
 // Select specific elements by existing class and add new class
 function setClassForElement(elementSelector, classNameToAdd, classToRemove) {
@@ -94,7 +96,7 @@ function validateInput(validationTargetId, messageText, messageTargetClass, elem
 
 function exercisesToList() {
   // Export items froms array and add items as li element to exerciseList
-  exerciseList.map((exercise, index) => {
+  exerciseArray.map((exercise, index) => {
     // Variables for li element
     const listElement = document.createElement("li");
 
@@ -111,7 +113,7 @@ function exercisesToList() {
     // Adds p element and button to li element and after that adds li element to ul
     listElement.appendChild(exerciseText);
     listElement.appendChild(btn);
-    document.getElementById("exerciseList").appendChild(listElement);
+    exerciseList.appendChild(listElement);
   });
 }
 
@@ -134,26 +136,26 @@ document.getElementById("timerControls").addEventListener("click", (e) => {
 
 function deleteExercise(e) {
   // Empty ul content
-  document.getElementById("exerciseList").innerHTML = "";
+  exerciseList.innerHTML = "";
 
   // Get data-id of the element that is going to be deleted
   // Data-id can be used as index
   const index = e.target.dataset.id;
 
   // Use array index to specify which exercise is going to be deleted
-  exerciseList.splice(index, 1);
+  exerciseArray.splice(index, 1);
 
   // Export items froms array and add items as li element to exerciseList
   exercisesToList();
 
   // If there's no exercises after deleting exercise show message to user
-  if (exerciseList.length <= 0) {
+  if (exerciseArray.length <= 0) {
     // Creates p element for message and add some text into element
     const messageExerciseListEmpty = document.createElement("p");
     messageExerciseListEmpty.textContent = `You removed all list elements. Add new exercises.`;
 
     // Adds p element to ul
-    document.getElementById("exerciseList").appendChild(messageExerciseListEmpty);
+    exerciseList.appendChild(messageExerciseListEmpty);
   }
 }
 
@@ -162,7 +164,7 @@ function addExercise() {
   // Check is errors displayd
   if (document.querySelectorAll(".exerciseError").length == 0) {
     // Empty ul
-    document.getElementById("exerciseList").innerHTML = "";
+    exerciseList.innerHTML = "";
 
     // Removes error message element from HTML
     //removeErrorMessage("exerciseError");
@@ -171,7 +173,7 @@ function addExercise() {
     const exerciseInput = document.getElementById("exercises");
 
     // Add exercise to array
-    exerciseList.push(exerciseInput.value);
+    exerciseArray.push(exerciseInput.value);
 
     // Export items froms array and add items as li element to exerciseList
     exercisesToList();
@@ -256,7 +258,7 @@ function timer() {
           // Set value for isPaused to false so timer starts running
           isPaused = false;
         }
-      }, "2000");
+      }, 2000);
     } else if (currentPhase === "rest") {
       createMessage("timerHeading", `Rest done. Get ready!`);
       //document.getElementById('timer').innerHTML = `Rest done! Get ready for next excercise.`;
@@ -264,15 +266,15 @@ function timer() {
       currentPhase = "active";
 
       // Set next exercise active
-      if (document.getElementById("exerciseList").getElementsByTagName("li").length >= 1) {
+      if (exerciseList.getElementsByTagName("li").length >= 1) {
         // Check if index grows bigger than list has items return it to starting position
-        if (document.getElementById("exerciseList").getElementsByTagName("li").length <= index + 1) {
+        if (exerciseList.getElementsByTagName("li").length <= index + 1) {
           index = -1;
         }
         // Bump up the index
         index++;
         // Add active indicator into the element
-        document.getElementById("exerciseList").getElementsByTagName("li")[index].appendChild(activeElement);
+        exerciseList.getElementsByTagName("li")[index].appendChild(activeElement);
       }
 
       // Set up seconds to active seconds and reset milliseconds
@@ -286,7 +288,7 @@ function timer() {
           // Set value for isPaused to false so timer starts running
           isPaused = false;
         }
-      }, "2000");
+      }, 2000);
     }
   }
 }
@@ -305,9 +307,9 @@ function start() {
       seconds = activeTimeInSeconds;
       milliSeconds = 0;
       currentPhase = "active";
-      if (document.getElementById("exerciseList").getElementsByTagName("li").length > 0) {
+      if (exerciseList.getElementsByTagName("li").length > 0) {
         // Activating first exercise from the list
-        document.getElementById("exerciseList").getElementsByTagName("li")[0].appendChild(activeElement);
+        exerciseList.getElementsByTagName("li")[0].appendChild(activeElement);
       }
       isEnded = false;
     }
@@ -321,9 +323,9 @@ function start() {
         seconds = activeTimeInSeconds;
 
         // Check if excercises is added
-        if (document.getElementById("exerciseList").getElementsByTagName("li").length > 0) {
+        if (exerciseList.getElementsByTagName("li").length > 0) {
           // Activating first exercise from the list
-          document.getElementById("exerciseList").getElementsByTagName("li")[0].appendChild(activeElement);
+          exerciseList.getElementsByTagName("li")[0].appendChild(activeElement);
         }
       }
       if (runningUiOn === false) {
@@ -364,7 +366,7 @@ function end() {
   createMessage("timerHeading", ``);
 
   // Check if excercises is added
-  if (document.getElementById("exerciseList").getElementsByTagName("li").length > 0) {
+  if (exerciseList.getElementsByTagName("li").length > 0) {
     // Removes active indicator
     document.getElementById("activeExercise").remove();
     // Sets index back to 0 so when timer is started it's correct
