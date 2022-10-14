@@ -1,5 +1,20 @@
 let exerciseList = [];
 
+// Variables for timer
+let seconds;
+let milliSeconds = 0;
+
+let activeTimePhase = false;
+let activeTimeInSeconds = 0;
+
+let restTimePhase = false;
+let restTimeInSeconds = 0;
+
+let currentPhase = "active";
+
+let isPaused = true;
+let isEnded = false;
+
 // Select specific elements by existing class and add new class
 function setClassForElement(elementSelector, classNameToAdd, classToRemove) {
   const elements = document.querySelectorAll(elementSelector);
@@ -40,9 +55,7 @@ function timerRunningUi() {
 
   // Add timer control buttons
   createButton("button", "pause", "Pause", "timerControls");
-  document.getElementById("pause").setAttribute("onclick", "pause()");
   createButton("button", "end", "End", "timerControls");
-  document.getElementById("end").setAttribute("onclick", "end()");
 
   // Hide inputs
   setClassForElement(".inputWrapper", "hidden", "visible");
@@ -68,7 +81,6 @@ function removeErrorMessage(errorMessageClassName, targetId) {
   elementToDelete.forEach((element) => {
     element.remove();
   });
-  //document.getElementsByClassName(elementId).remove();
 }
 
 // Validation
@@ -82,7 +94,7 @@ function validateInput(validationTargetId, messageText, messageTargetClass, elem
 
 function exercisesToList() {
   // Export items froms array and add items as li element to exerciseList
-  exerciseList.map((exercise) => {
+  exerciseList.map((exercise, index) => {
     // Variables for li element
     const listElement = document.createElement("li");
 
@@ -93,6 +105,7 @@ function exercisesToList() {
     // Add delete button
     const btn = document.createElement("button");
     btn.innerHTML = "Delete";
+    btn.dataset.id = index;
     btn.addEventListener("click", deleteExercise);
 
     // Adds p element and button to li element and after that adds li element to ul
@@ -102,18 +115,33 @@ function exercisesToList() {
   });
 }
 
+// Listens if which button inside of the timerControls is clicked and runs function depens on clicked button
+document.getElementById("timerControls").addEventListener("click", (e) => {
+  const buttonPressed = e.target.id;
+  console.log(e.target.id);
+  switch (buttonPressed) {
+    case "start":
+      start();
+      break;
+    case "pause":
+      pause();
+      break;
+    case "end":
+      end();
+      break;
+  }
+});
+
 function deleteExercise(e) {
-  // Empty ul
+  // Empty ul content
   document.getElementById("exerciseList").innerHTML = "";
 
-  // Checks the name of the exercise which is being deleted
-  const targetLi = e.target.previousSibling.innerHTML;
-
-  // Checks array index of the exercise which is being deleted
-  const indexOfTarget = exerciseList.indexOf(targetLi);
+  // Get data-id of the element that is going to be deleted
+  // Data-id can be used as index
+  const index = e.target.dataset.id;
 
   // Use array index to specify which exercise is going to be deleted
-  exerciseList.splice(indexOfTarget, 1);
+  exerciseList.splice(index, 1);
 
   // Export items froms array and add items as li element to exerciseList
   exercisesToList();
@@ -153,20 +181,9 @@ function addExercise() {
   }
 }
 
-// Variables for timer
-let seconds;
-let milliSeconds = 0;
-
-let activeTimePhase = false;
-let activeTimeInSeconds = 0;
-
-let restTimePhase = false;
-let restTimeInSeconds = 0;
-
-let currentPhase = "active";
-
-let isPaused = true;
-let isEnded = false;
+//
+// Timer
+//
 
 const activeTime = document.getElementById("activeTime");
 activeTime.addEventListener("change", setActiveTime);
