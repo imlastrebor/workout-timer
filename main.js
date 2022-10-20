@@ -15,6 +15,8 @@ let currentPhase = "active";
 let isPaused = true;
 let isEnded = false;
 
+let activeElementIsSet;
+
 const exerciseList = document.getElementById("exerciseList");
 
 // Select specific elements by existing class and add new class
@@ -86,8 +88,8 @@ function removeErrorMessage(errorMessageClassName, targetId) {
 }
 
 // Validation
-function validateInput(validationTargetId, messageText, messageTargetClass, elementId) {
-  if (document.getElementById(validationTargetId).value == "") {
+function validateInput({ validationTargetId, messageText, messageTargetClass, elementId }) {
+  if (document.getElementById(validationTargetId).value === "") {
     createErrorMessage(messageText, elementId, messageTargetClass);
   } else {
     removeErrorMessage(elementId, messageTargetClass);
@@ -123,6 +125,21 @@ document.getElementById("timerControls").addEventListener("click", (e) => {
   console.log(e.target.id);
   switch (buttonPressed) {
     case "start":
+      // Validate timer inputs
+      validateInput({
+        validationTargetId: "activeTime",
+        messageText: "You must add active time!",
+        messageTargetClass: "activeTimeErrorContainer",
+        elementId: "timeError",
+      });
+      validateInput({
+        validationTargetId: "restTime",
+        messageText: "You must add rest time!",
+        messageTargetClass: "restTimeErrorContainer",
+        elementId: "timeError",
+      });
+
+      // Start timer
       start();
       break;
     case "pause":
@@ -160,7 +177,12 @@ function deleteExercise(e) {
 }
 
 function addExercise() {
-  validateInput("exercises", "Add exercises name", "exerciseErrorContainer", "exerciseError");
+  validateInput({
+    validationTargetId: "exercises",
+    messageText: "Add exercises name",
+    messageTargetClass: "exerciseErrorContainer",
+    elementId: "exerciseError",
+  });
   // Check is errors displayd
   if (document.querySelectorAll(".exerciseError").length == 0) {
     // Empty ul
@@ -213,8 +235,30 @@ function createMessage(targetId, message) {
   document.getElementById(targetId).innerHTML = message;
 }
 
+// Functio to check if excercises is added and then add active element to first exercise
+function setActiveElementFirstTime() {
+  if (exerciseList.getElementsByTagName("li").length > 0 && activeElementIsSet === undefined) {
+    // Activating first exercise from the list
+    exerciseList.getElementsByTagName("li")[0].appendChild(activeElement);
+    activeElementIsSet = true;
+  }
+}
+
+// Show time in html element
+function showTimeInHtmlElement() {
+  // Checking when timer goes under 10 seconds and add leading 0 to seconds
+  if (seconds > 9) {
+    createMessage("timer", `${seconds}:${milliSeconds}`);
+  } else {
+    createMessage("timer", `0${seconds}:${milliSeconds}`);
+  }
+}
+
 // Timer function
 function timer() {
+  // Check if excercises is added and then add active element to first exercise
+  setActiveElementFirstTime();
+
   // Remove 1 millisecond every time this function runs
   milliSeconds -= 1;
 
@@ -224,13 +268,8 @@ function timer() {
     milliSeconds = 99;
   }
 
-  // Add time to html element
-  // Checking when timer goes under 10 seconds and add leading 0 to seconds
-  if (seconds > 9) {
-    document.getElementById("timer").innerHTML = `${seconds}:${milliSeconds}`;
-  } else {
-    document.getElementById("timer").innerHTML = `0${seconds}:${milliSeconds}`;
-  }
+  // Show time in html element
+  showTimeInHtmlElement();
 
   // Take action when timer phase is done
   if (seconds <= -1) {
@@ -295,10 +334,6 @@ function timer() {
 
 // Start timer function
 function start() {
-  // Validations for inputs
-  validateInput("activeTime", "You must add active time!", "activeTimeErrorContainer", "timeError");
-  validateInput("restTime", "You must add rest time!", "restTimeErrorContainer", "timeError");
-
   // Check if error messages are displayd. If not run timer.
   if (document.querySelectorAll(".timeError").length == 0) {
     // If timer has been ended and user clicks start
