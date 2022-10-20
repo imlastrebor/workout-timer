@@ -98,7 +98,8 @@ function validateInput({ validationTargetId, messageText, messageTargetClass, el
 
 function exercisesToList() {
   // Export items froms array and add items as li element to exerciseList
-  exerciseArray.map((exercise, index) => {
+
+  exerciseArray.forEach((exercise, index) => {
     // Variables for li element
     const listElement = document.createElement("li");
 
