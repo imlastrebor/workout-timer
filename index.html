@@ -8,7 +8,7 @@
 
     <title>Workout Timer</title>
   </head>
-  <body>
+  <body id="bodyId">
     <h1>Workout Timer</h1>
     <section id="timerSetup">
       <div>
@@ -32,7 +32,7 @@
       <div class="inputWrapper">
         <label for="exercises">Exercises</label>
         <input type="text" id="exercises" placeholder="Exercise name" />
-        <button onclick="addExercise()">Add exercise</button>
+        <button id="addExerciseBtn">Add exercise</button>
         <div id="exerciseErrorContainer" class="error"></div>
         <div id="messageContainer"></div>
       </div>
@@ -47,5 +47,5 @@
       </div>
     </section>
   </body>
-  <script src="main.js"></script>
+  <script type="module" src="main.js"></script>
 </html>

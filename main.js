@@ -1,8 +1,11 @@
+import { createButtonModule } from "./createButton.js";
+import { addClass, removeClass } from "./class.js";
+
 let exerciseArray = [];
 
 // Variables for timer
 let seconds;
-let milliSeconds = 0;
+let hundredsOfSeconds = 0;
 
 let activeTimePhase = false;
 let activeTimeInSeconds = 0;
@@ -17,6 +20,11 @@ let isEnded = false;
 
 let activeElementIsSet;
 
+let runningUiOn = false;
+let settingsUiOn = false;
+
+console.log(hundredsOfSeconds);
+
 const exerciseList = document.getElementById("exerciseList");
 
 // Select specific elements by existing class and add new class
@@ -30,36 +38,36 @@ function setClassForElement(elementSelector, classNameToAdd, classToRemove) {
 }
 
 // When timer is running show this UI
-let settingsUiOn = false;
 function timerSettingsUi() {
   settingsUiOn = true;
   runningUiOn = false;
   console.log("timer is ended");
-  document.getElementById("pause").remove();
-  document.getElementById("end").remove();
+
+  removeClass("pause", "visible");
+  addClass("pause", "hidden");
+  removeClass("end", "visible");
+  addClass("end", "hidden");
 
   // Show inputs
   setClassForElement(".inputWrapper", "visible", "hidden");
 }
 
-// Create button
-function createButton(setElementClass, setElementId, buttonText, targetId) {
-  const button = document.createElement("button");
-  button.setAttribute("class", setElementClass);
-  button.setAttribute("id", setElementId);
-  button.textContent = buttonText;
-  document.getElementById(targetId).appendChild(button);
-}
+// Add timer control buttons
+createButtonModule("button", "pause", "Pause", "timerControls");
+document.getElementById("pause").classList.add("hidden");
+createButtonModule("button", "end", "End", "timerControls");
+document.getElementById("end").classList.add("hidden");
 
 // When timer is running show this UI
-let runningUiOn = false;
+
 function timerRunningUi() {
+  removeClass("pause", "hidden");
+  addClass("pause", "visible");
+  removeClass("end", "hiddeb");
+  addClass("end", "visible");
+
   runningUiOn = true;
   settingsUiOn = false;
-
-  // Add timer control buttons
-  createButton("button", "pause", "Pause", "timerControls");
-  createButton("button", "end", "End", "timerControls");
 
   // Hide inputs
   setClassForElement(".inputWrapper", "hidden", "visible");
@@ -177,6 +185,9 @@ function deleteExercise(e) {
   }
 }
 
+// Add event listener for the exercise btn
+document.getElementById("addExerciseBtn").addEventListener("click", addExercise);
+
 function addExercise() {
   validateInput({
     validationTargetId: "exercises",
@@ -249,9 +260,9 @@ function setActiveElementFirstTime() {
 function showTimeInHtmlElement() {
   // Checking when timer goes under 10 seconds and add leading 0 to seconds
   if (seconds > 9) {
-    createMessage("timer", `${seconds}:${milliSeconds}`);
+    createMessage("timer", `${seconds}:${hundredsOfSeconds}`);
   } else {
-    createMessage("timer", `0${seconds}:${milliSeconds}`);
+    createMessage("timer", `0${seconds}:${hundredsOfSeconds}`);
   }
 }
 
@@ -261,12 +272,12 @@ function timer() {
   setActiveElementFirstTime();
 
   // Remove 1 millisecond every time this function runs
-  milliSeconds -= 1;
+  hundredsOfSeconds -= 1;
 
-  // When milliseconds hit 0 remove 1 second and set milliseconds to 99
-  if (milliSeconds <= 0) {
+  // When hundredsOfSeconds hit 0 remove 1 second and set hundredsOfSeconds to 99
+  if (hundredsOfSeconds <= 0) {
     seconds--;
-    milliSeconds = 99;
+    hundredsOfSeconds = 99;
   }
 
   // Show time in html element
@@ -287,9 +298,9 @@ function timer() {
       // If current phase is active lets change the it to rest
       currentPhase = "rest";
 
-      // Set up seconds to rest seconds and reset milliseconds
+      // Set up seconds to rest seconds and reset hundredsOfSeconds
       seconds = restTimeInSeconds;
-      milliSeconds = 0;
+      hundredsOfSeconds = 0;
 
       setTimeout(() => {
         // If end timer is clicked during timeout timer doesn't start running after timeout ends
@@ -317,9 +328,9 @@ function timer() {
         exerciseList.getElementsByTagName("li")[index].appendChild(activeElement);
       }
 
-      // Set up seconds to active seconds and reset milliseconds
+      // Set up seconds to active seconds and reset hundredsOfSeconds
       seconds = activeTimeInSeconds;
-      milliSeconds = 0;
+      hundredsOfSeconds = 0;
 
       setTimeout(() => {
         // If end timer is clicked during timeout timer doesn't start running after timeout ends
@@ -341,7 +352,7 @@ function start() {
     if (isEnded) {
       createMessage("timerHeading", `Keep going on!`);
       seconds = activeTimeInSeconds;
-      milliSeconds = 0;
+      hundredsOfSeconds = 0;
       currentPhase = "active";
       if (exerciseList.getElementsByTagName("li").length > 0) {
         // Activating first exercise from the list
@@ -410,7 +421,7 @@ function end() {
   }
 }
 
-// Function that runs timer after every 10 milliseconds if timer is not paused
+// Function that runs timer after every 10 hundredsOfSeconds if timer is not paused
 const timerInterval = setInterval(() => {
   if (!isPaused) {
     timer();
