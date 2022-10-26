@@ -1,5 +1,5 @@
 // Create button
-export function createButtonModule(setElementClass, setElementId, buttonText, targetId) {
+export function createButton(setElementClass, setElementId, buttonText, targetId) {
   const button = document.createElement("button");
   button.setAttribute("class", setElementClass);
   button.setAttribute("id", setElementId);

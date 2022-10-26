@@ -1,5 +1,6 @@
-import { createButtonModule } from "./createButton.js";
-import { addClass, removeClass } from "./class.js";
+import { createButton } from "./createButton.js";
+import { runningUiOn, settingsUiOn, timerRunningUi, timerNotRunningUi } from "./timerUi.js";
+import { createErrorMessage, removeErrorMessage } from "./errorMessage.js";
 
 let exerciseArray = [];
 
@@ -7,10 +8,7 @@ let exerciseArray = [];
 let seconds;
 let hundredsOfSeconds = 0;
 
-let activeTimePhase = false;
 let activeTimeInSeconds = 0;
-
-let restTimePhase = false;
 let restTimeInSeconds = 0;
 
 let currentPhase = "active";
@@ -20,80 +18,13 @@ let isEnded = false;
 
 let activeElementIsSet;
 
-let runningUiOn = false;
-let settingsUiOn = false;
-
-console.log(hundredsOfSeconds);
-
 const exerciseList = document.getElementById("exerciseList");
 
-// Select specific elements by existing class and add new class
-function setClassForElement(elementSelector, classNameToAdd, classToRemove) {
-  const elements = document.querySelectorAll(elementSelector);
-  // Add class for each selected element
-  elements.forEach((element) => {
-    element.classList.add(classNameToAdd);
-    element.classList.remove(classToRemove);
-  });
-}
-
-// When timer is running show this UI
-function timerSettingsUi() {
-  settingsUiOn = true;
-  runningUiOn = false;
-  console.log("timer is ended");
-
-  removeClass("pause", "visible");
-  addClass("pause", "hidden");
-  removeClass("end", "visible");
-  addClass("end", "hidden");
-
-  // Show inputs
-  setClassForElement(".inputWrapper", "visible", "hidden");
-}
-
 // Add timer control buttons
-createButtonModule("button", "pause", "Pause", "timerControls");
+createButton("button", "pause", "Pause", "timerControls");
 document.getElementById("pause").classList.add("hidden");
-createButtonModule("button", "end", "End", "timerControls");
+createButton("button", "end", "End", "timerControls");
 document.getElementById("end").classList.add("hidden");
-
-// When timer is running show this UI
-
-function timerRunningUi() {
-  removeClass("pause", "hidden");
-  addClass("pause", "visible");
-  removeClass("end", "hiddeb");
-  addClass("end", "visible");
-
-  runningUiOn = true;
-  settingsUiOn = false;
-
-  // Hide inputs
-  setClassForElement(".inputWrapper", "hidden", "visible");
-}
-
-// Function creates error message
-function createErrorMessage(messageText, setElementClass, targetId) {
-  // Check is there already error message and if there's not function creates one
-  if (document.getElementById(targetId).querySelector("." + setElementClass) == null) {
-    // Create new p element for error message and add it to target
-    const errorElement = document.createElement("p");
-    errorElement.setAttribute("class", setElementClass);
-    errorElement.textContent = messageText;
-    document.getElementById(targetId).appendChild(errorElement);
-  }
-}
-
-// Function to remove error message
-function removeErrorMessage(errorMessageClassName, targetId) {
-  // Select all elements with specific class name
-  const elementToDelete = document.getElementById(targetId).querySelectorAll("." + errorMessageClassName);
-  // Run remove for each selected element
-  elementToDelete.forEach((element) => {
-    element.remove();
-  });
-}
 
 // Validation
 function validateInput({ validationTargetId, messageText, messageTargetClass, elementId }) {
@@ -399,7 +330,7 @@ function pause() {
 function end() {
   // Add timer setting UI
   if (settingsUiOn === false) {
-    timerSettingsUi();
+    timerNotRunningUi();
   }
 
   // Pauses timer
