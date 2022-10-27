@@ -1,68 +1,6 @@
-import { createButton } from "./createButton.js";
-import { runningUiOn, settingsUiOn, timerRunningUi, timerNotRunningUi } from "./timerUi.js";
-import { validateInput } from "./validation.js";
-import { addExercise } from "./exercises.js";
+import { createMessage } from "./createMessage.js";
+import { activeElement, isEnded, isPaused } from "./globalVariables.js";
 
-// let exerciseArray = [];
-
-// Variables for timer
-let seconds;
-let hundredsOfSeconds = 0;
-
-let activeTimeInSeconds = 0;
-let restTimeInSeconds = 0;
-
-let currentPhase = "active";
-
-let isPaused = true;
-let isEnded = false;
-
-let activeElementIsSet;
-
-const exerciseList = document.getElementById("exerciseList");
-
-// Add timer control buttons
-createButton("button", "pause", "Pause", "timerControls");
-document.getElementById("pause").classList.add("hidden");
-createButton("button", "end", "End", "timerControls");
-document.getElementById("end").classList.add("hidden");
-
-// Listens if which button inside of the timerControls is clicked and runs function depens on clicked button
-document.getElementById("timerControls").addEventListener("click", (e) => {
-  const buttonPressed = e.target.id;
-  console.log(e.target.id);
-  switch (buttonPressed) {
-    case "start":
-      // Validate timer inputs
-      validateInput({
-        validationTargetId: "activeTime",
-        messageText: "You must add active time!",
-        messageTargetClass: "activeTimeErrorContainer",
-        elementId: "timeError",
-      });
-      validateInput({
-        validationTargetId: "restTime",
-        messageText: "You must add rest time!",
-        messageTargetClass: "restTimeErrorContainer",
-        elementId: "timeError",
-      });
-
-      // Start timer
-      start();
-      break;
-    case "pause":
-      pause();
-      break;
-    case "end":
-      end();
-      break;
-  }
-});
-
-// Add event listener for the exercise btn
-document.getElementById("addExerciseBtn").addEventListener("click", addExercise);
-
-//
 // Timer
 //
 
@@ -82,15 +20,10 @@ function setRestTime() {
 
 // Active exercise indicator
 const activeIndicator = "ACTIVE EXERCISE";
-const activeElement = document.createElement("p");
 activeElement.setAttribute("id", "activeExercise");
 activeElement.textContent = activeIndicator;
 
 let index = 0;
-
-function createMessage(targetId, message) {
-  document.getElementById(targetId).innerHTML = message;
-}
 
 // Function to check if excercises is added and then add active element to first exercise
 function setActiveElementFirstTime() {
@@ -186,83 +119,6 @@ function timer() {
         }
       }, 2000);
     }
-  }
-}
-
-// Start timer function
-function start() {
-  // Check if error messages are displayd. If not run timer.
-  if (document.querySelectorAll(".timeError").length == 0) {
-    // If timer has been ended and user clicks start
-    if (isEnded) {
-      createMessage("timerHeading", `Keep going on!`);
-      seconds = activeTimeInSeconds;
-      hundredsOfSeconds = 0;
-      currentPhase = "active";
-      if (exerciseList.getElementsByTagName("li").length > 0) {
-        // Activating first exercise from the list
-        exerciseList.getElementsByTagName("li")[0].appendChild(activeElement);
-      }
-      isEnded = false;
-    }
-    // If timer has been paused and user clicks start
-    if (isPaused) {
-      // Check if timer is used first time
-      if (currentPhase === "active" && seconds === undefined) {
-        createMessage("timerHeading", `Keep going on!`);
-
-        // Set seconds to active time that user has set
-        seconds = activeTimeInSeconds;
-
-        // Check if excercises is added
-        if (exerciseList.getElementsByTagName("li").length > 0) {
-          // Activating first exercise from the list
-          exerciseList.getElementsByTagName("li")[0].appendChild(activeElement);
-        }
-      }
-      if (runningUiOn === false) {
-        // Add timer running UI
-        timerRunningUi();
-      }
-
-      // Unpause timer
-      isPaused = false;
-    }
-  }
-}
-
-// Pause timer function
-function pause() {
-  // If timer is not paused
-  if (!isPaused) {
-    // Pause timer
-    isPaused = true;
-  }
-}
-
-// End timer function
-function end() {
-  // Add timer setting UI
-  if (settingsUiOn === false) {
-    timerNotRunningUi();
-  }
-
-  // Pauses timer
-  isPaused = true;
-  // Ends timer
-  isEnded = true;
-
-  // Reset timer text element
-  createMessage("timer", ``);
-  // Reset timer heading text element
-  createMessage("timerHeading", ``);
-
-  // Check if excercises is added
-  if (exerciseList.getElementsByTagName("li").length > 0) {
-    // Removes active indicator
-    document.getElementById("activeExercise").remove();
-    // Sets index back to 0 so when timer is started it's correct
-    index = 0;
   }
 }
 
