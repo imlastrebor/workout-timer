@@ -1,6 +1,11 @@
+@import "colors";
+
 .hidden {
   display: none;
 }
 .visible {
   display: block;
+}
+p {
+  color: $primary-color;
 }

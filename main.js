@@ -1,172 +1,70 @@
-let exerciseList = [];
+import { createButton } from "./js/createButton.js";
+import { runningUiOn, settingsUiOn, timerRunningUi, timerNotRunningUi } from "./js/timerUi.js";
+import { validateInput } from "./js/validation.js";
+import { addExercise } from "./js/exercises.js";
 
-// Select specific elements by existing class and add new class
-function setClassForElement(elementSelector, classNameToAdd, classToRemove) {
-  const elements = document.querySelectorAll(elementSelector);
-  // Add class for each selected element
-  elements.forEach((element) => {
-    element.classList.add(classNameToAdd);
-    element.classList.remove(classToRemove);
-  });
-}
-
-// When timer is running show this UI
-let settingsUiOn = false;
-function timerSettingsUi() {
-  settingsUiOn = true;
-  runningUiOn = false;
-  console.log("timer is ended");
-  document.getElementById("pause").remove();
-  document.getElementById("end").remove();
-
-  // Show inputs
-  setClassForElement(".inputWrapper", "visible", "hidden");
-}
-
-// Create button
-function createButton(setElementClass, setElementId, buttonText, targetId) {
-  const button = document.createElement("button");
-  button.setAttribute("class", setElementClass);
-  button.setAttribute("id", setElementId);
-  button.textContent = buttonText;
-  document.getElementById(targetId).appendChild(button);
-}
-
-// When timer is running show this UI
-let runningUiOn = false;
-function timerRunningUi() {
-  runningUiOn = true;
-  settingsUiOn = false;
-
-  // Add timer control buttons
-  createButton("button", "pause", "Pause", "timerControls");
-  document.getElementById("pause").setAttribute("onclick", "pause()");
-  createButton("button", "end", "End", "timerControls");
-  document.getElementById("end").setAttribute("onclick", "end()");
-
-  // Hide inputs
-  setClassForElement(".inputWrapper", "hidden", "visible");
-}
-
-// Function creates error message
-function createErrorMessage(messageText, setElementClass, targetId) {
-  // Check is there already error message and if there's not function creates one
-  if (document.getElementById(targetId).querySelector("." + setElementClass) == null) {
-    // Create new p element for error message and add it to target
-    const errorElement = document.createElement("p");
-    errorElement.setAttribute("class", setElementClass);
-    errorElement.textContent = messageText;
-    document.getElementById(targetId).appendChild(errorElement);
-  }
-}
-
-// Function to remove error message
-function removeErrorMessage(errorMessageClassName, targetId) {
-  // Select all elements with specific class name
-  const elementToDelete = document.getElementById(targetId).querySelectorAll("." + errorMessageClassName);
-  // Run remove for each selected element
-  elementToDelete.forEach((element) => {
-    element.remove();
-  });
-  //document.getElementsByClassName(elementId).remove();
-}
-
-// Validation
-function validateInput(validationTargetId, messageText, messageTargetClass, elementId) {
-  if (document.getElementById(validationTargetId).value == "") {
-    createErrorMessage(messageText, elementId, messageTargetClass);
-  } else {
-    removeErrorMessage(elementId, messageTargetClass);
-  }
-}
-
-function exercisesToList() {
-  // Export items froms array and add items as li element to exerciseList
-  exerciseList.map((exercise) => {
-    // Variables for li element
-    const listElement = document.createElement("li");
-
-    // Variable for p element. Inserts exercise name to p element
-    const exerciseText = document.createElement("p");
-    exerciseText.textContent = exercise;
-
-    // Add delete button
-    const btn = document.createElement("button");
-    btn.innerHTML = "Delete";
-    btn.addEventListener("click", deleteExercise);
-
-    // Adds p element and button to li element and after that adds li element to ul
-    listElement.appendChild(exerciseText);
-    listElement.appendChild(btn);
-    document.getElementById("exerciseList").appendChild(listElement);
-  });
-}
-
-function deleteExercise(e) {
-  // Empty ul
-  document.getElementById("exerciseList").innerHTML = "";
-
-  // Checks the name of the exercise which is being deleted
-  const targetLi = e.target.previousSibling.innerHTML;
-
-  // Checks array index of the exercise which is being deleted
-  const indexOfTarget = exerciseList.indexOf(targetLi);
-
-  // Use array index to specify which exercise is going to be deleted
-  exerciseList.splice(indexOfTarget, 1);
-
-  // Export items froms array and add items as li element to exerciseList
-  exercisesToList();
-
-  // If there's no exercises after deleting exercise show message to user
-  if (exerciseList.length <= 0) {
-    // Creates p element for message and add some text into element
-    const messageExerciseListEmpty = document.createElement("p");
-    messageExerciseListEmpty.textContent = `You removed all list elements. Add new exercises.`;
-
-    // Adds p element to ul
-    document.getElementById("exerciseList").appendChild(messageExerciseListEmpty);
-  }
-}
-
-function addExercise() {
-  validateInput("exercises", "Add exercises name", "exerciseErrorContainer", "exerciseError");
-  // Check is errors displayd
-  if (document.querySelectorAll(".exerciseError").length == 0) {
-    // Empty ul
-    document.getElementById("exerciseList").innerHTML = "";
-
-    // Removes error message element from HTML
-    //removeErrorMessage("exerciseError");
-
-    // Get the exercise name from input field
-    const exerciseInput = document.getElementById("exercises");
-
-    // Add exercise to array
-    exerciseList.push(exerciseInput.value);
-
-    // Export items froms array and add items as li element to exerciseList
-    exercisesToList();
-
-    // Empty input field
-    exerciseInput.value = "";
-  }
-}
+// let exerciseArray = [];
 
 // Variables for timer
 let seconds;
-let milliSeconds = 0;
+let hundredsOfSeconds = 0;
 
-let activeTimePhase = false;
 let activeTimeInSeconds = 0;
-
-let restTimePhase = false;
 let restTimeInSeconds = 0;
 
 let currentPhase = "active";
 
 let isPaused = true;
 let isEnded = false;
+
+let activeElementIsSet;
+
+const exerciseList = document.getElementById("exerciseList");
+
+// Add timer control buttons
+createButton("button", "pause", "Pause", "timerControls");
+document.getElementById("pause").classList.add("hidden");
+createButton("button", "end", "End", "timerControls");
+document.getElementById("end").classList.add("hidden");
+
+// Listens if which button inside of the timerControls is clicked and runs function depens on clicked button
+document.getElementById("timerControls").addEventListener("click", (e) => {
+  const buttonPressed = e.target.id;
+  console.log(e.target.id);
+  switch (buttonPressed) {
+    case "start":
+      // Validate timer inputs
+      validateInput({
+        validationTargetId: "activeTime",
+        messageText: "You must add active time!",
+        messageTargetClass: "activeTimeErrorContainer",
+        elementId: "timeError",
+      });
+      validateInput({
+        validationTargetId: "restTime",
+        messageText: "You must add rest time!",
+        messageTargetClass: "restTimeErrorContainer",
+        elementId: "timeError",
+      });
+
+      // Start timer
+      start();
+      break;
+    case "pause":
+      pause();
+      break;
+    case "end":
+      end();
+      break;
+  }
+});
+
+// Add event listener for the exercise btn
+document.getElementById("addExerciseBtn").addEventListener("click", addExercise);
+
+//
+// Timer
+//
 
 const activeTime = document.getElementById("activeTime");
 activeTime.addEventListener("change", setActiveTime);
@@ -194,24 +92,41 @@ function createMessage(targetId, message) {
   document.getElementById(targetId).innerHTML = message;
 }
 
-// Timer function
-function timer() {
-  // Remove 1 millisecond every time this function runs
-  milliSeconds -= 1;
-
-  // When milliseconds hit 0 remove 1 second and set milliseconds to 99
-  if (milliSeconds <= 0) {
-    seconds--;
-    milliSeconds = 99;
+// Function to check if excercises is added and then add active element to first exercise
+function setActiveElementFirstTime() {
+  if (exerciseList.getElementsByTagName("li").length > 0 && activeElementIsSet === undefined) {
+    // Activating first exercise from the list
+    exerciseList.getElementsByTagName("li")[0].appendChild(activeElement);
+    activeElementIsSet = true;
   }
+}
 
-  // Add time to html element
+// Show time in html element
+function showTimeInHtmlElement() {
   // Checking when timer goes under 10 seconds and add leading 0 to seconds
   if (seconds > 9) {
-    document.getElementById("timer").innerHTML = `${seconds}:${milliSeconds}`;
+    createMessage("timer", `${seconds}:${hundredsOfSeconds}`);
   } else {
-    document.getElementById("timer").innerHTML = `0${seconds}:${milliSeconds}`;
+    createMessage("timer", `0${seconds}:${hundredsOfSeconds}`);
   }
+}
+
+// Timer function
+function timer() {
+  // Check if excercises is added and then add active element to first exercise
+  setActiveElementFirstTime();
+
+  // Remove 1 millisecond every time this function runs
+  hundredsOfSeconds -= 1;
+
+  // When hundredsOfSeconds hit 0 remove 1 second and set hundredsOfSeconds to 99
+  if (hundredsOfSeconds <= 0) {
+    seconds--;
+    hundredsOfSeconds = 99;
+  }
+
+  // Show time in html element
+  showTimeInHtmlElement();
 
   // Take action when timer phase is done
   if (seconds <= -1) {
@@ -228,9 +143,9 @@ function timer() {
       // If current phase is active lets change the it to rest
       currentPhase = "rest";
 
-      // Set up seconds to rest seconds and reset milliseconds
+      // Set up seconds to rest seconds and reset hundredsOfSeconds
       seconds = restTimeInSeconds;
-      milliSeconds = 0;
+      hundredsOfSeconds = 0;
 
       setTimeout(() => {
         // If end timer is clicked during timeout timer doesn't start running after timeout ends
@@ -239,7 +154,7 @@ function timer() {
           // Set value for isPaused to false so timer starts running
           isPaused = false;
         }
-      }, "2000");
+      }, 2000);
     } else if (currentPhase === "rest") {
       createMessage("timerHeading", `Rest done. Get ready!`);
       //document.getElementById('timer').innerHTML = `Rest done! Get ready for next excercise.`;
@@ -247,20 +162,20 @@ function timer() {
       currentPhase = "active";
 
       // Set next exercise active
-      if (document.getElementById("exerciseList").getElementsByTagName("li").length >= 1) {
+      if (exerciseList.getElementsByTagName("li").length >= 1) {
         // Check if index grows bigger than list has items return it to starting position
-        if (document.getElementById("exerciseList").getElementsByTagName("li").length <= index + 1) {
+        if (exerciseList.getElementsByTagName("li").length <= index + 1) {
           index = -1;
         }
         // Bump up the index
         index++;
         // Add active indicator into the element
-        document.getElementById("exerciseList").getElementsByTagName("li")[index].appendChild(activeElement);
+        exerciseList.getElementsByTagName("li")[index].appendChild(activeElement);
       }
 
-      // Set up seconds to active seconds and reset milliseconds
+      // Set up seconds to active seconds and reset hundredsOfSeconds
       seconds = activeTimeInSeconds;
-      milliSeconds = 0;
+      hundredsOfSeconds = 0;
 
       setTimeout(() => {
         // If end timer is clicked during timeout timer doesn't start running after timeout ends
@@ -269,28 +184,24 @@ function timer() {
           // Set value for isPaused to false so timer starts running
           isPaused = false;
         }
-      }, "2000");
+      }, 2000);
     }
   }
 }
 
 // Start timer function
 function start() {
-  // Validations for inputs
-  validateInput("activeTime", "You must add active time!", "activeTimeErrorContainer", "timeError");
-  validateInput("restTime", "You must add rest time!", "restTimeErrorContainer", "timeError");
-
   // Check if error messages are displayd. If not run timer.
   if (document.querySelectorAll(".timeError").length == 0) {
     // If timer has been ended and user clicks start
     if (isEnded) {
       createMessage("timerHeading", `Keep going on!`);
       seconds = activeTimeInSeconds;
-      milliSeconds = 0;
+      hundredsOfSeconds = 0;
       currentPhase = "active";
-      if (document.getElementById("exerciseList").getElementsByTagName("li").length > 0) {
+      if (exerciseList.getElementsByTagName("li").length > 0) {
         // Activating first exercise from the list
-        document.getElementById("exerciseList").getElementsByTagName("li")[0].appendChild(activeElement);
+        exerciseList.getElementsByTagName("li")[0].appendChild(activeElement);
       }
       isEnded = false;
     }
@@ -304,9 +215,9 @@ function start() {
         seconds = activeTimeInSeconds;
 
         // Check if excercises is added
-        if (document.getElementById("exerciseList").getElementsByTagName("li").length > 0) {
+        if (exerciseList.getElementsByTagName("li").length > 0) {
           // Activating first exercise from the list
-          document.getElementById("exerciseList").getElementsByTagName("li")[0].appendChild(activeElement);
+          exerciseList.getElementsByTagName("li")[0].appendChild(activeElement);
         }
       }
       if (runningUiOn === false) {
@@ -333,7 +244,7 @@ function pause() {
 function end() {
   // Add timer setting UI
   if (settingsUiOn === false) {
-    timerSettingsUi();
+    timerNotRunningUi();
   }
 
   // Pauses timer
@@ -347,7 +258,7 @@ function end() {
   createMessage("timerHeading", ``);
 
   // Check if excercises is added
-  if (document.getElementById("exerciseList").getElementsByTagName("li").length > 0) {
+  if (exerciseList.getElementsByTagName("li").length > 0) {
     // Removes active indicator
     document.getElementById("activeExercise").remove();
     // Sets index back to 0 so when timer is started it's correct
@@ -355,7 +266,7 @@ function end() {
   }
 }
 
-// Function that runs timer after every 10 milliseconds if timer is not paused
+// Function that runs timer after every 10 hundredsOfSeconds if timer is not paused
 const timerInterval = setInterval(() => {
   if (!isPaused) {
     timer();

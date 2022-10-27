@@ -1,0 +1,24 @@
+{
+  "name": "workout-timer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "css": "node-sass --include-path scss ./sass/style.scss ./css/style.css",
+    "watch": "nodemon -e scss -x 'npm run css'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imlastrebor/workout-timer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/imlastrebor/workout-timer/issues"
+  },
+  "homepage": "https://github.com/imlastrebor/workout-timer#readme",
+  "devDependencies": {
+    "node-sass": "^7.0.3",
+    "nodemon": "^2.0.20"
+  }
+}
