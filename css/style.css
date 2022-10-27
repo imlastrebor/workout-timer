@@ -3,3 +3,6 @@
 
 .visible {
   display: block; }
+
+p {
+  color: green; }

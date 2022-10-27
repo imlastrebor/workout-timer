@@ -1,7 +1,7 @@
-import { createButton } from "./createButton.js";
-import { runningUiOn, settingsUiOn, timerRunningUi, timerNotRunningUi } from "./timerUi.js";
-import { validateInput } from "./validation.js";
-import { addExercise } from "./exercises.js";
+import { createButton } from "./js/createButton.js";
+import { runningUiOn, settingsUiOn, timerRunningUi, timerNotRunningUi } from "./js/timerUi.js";
+import { validateInput } from "./js/validation.js";
+import { addExercise } from "./js/exercises.js";
 
 // let exerciseArray = [];
 
