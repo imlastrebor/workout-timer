@@ -1,11 +1,74 @@
-@import "colors";
+@import "./partials/colors";
+@import "./partials/fonts";
+@import "./partials/button";
+@import "./partials/input";
+@import "./partials/exerciseList";
 
 .hidden {
-  display: none;
+  display: none !important;
 }
+
 .visible {
-  display: block;
+  display: block !important;
 }
-p {
-  color: $primary-color;
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0 1.5rem 0 1.5rem;
+}
+header {
+  padding: 4rem 0 3rem 0;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100%;
+  > *:not(:first-child) {
+    margin-top: 3rem;
+  }
+}
+footer {
+  background-color: rgb(255, 242, 252);
+  width: 100%;
+  text-align: center;
+  padding: 2rem;
+  margin-top: auto !important;
+}
+
+section {
+  min-width: 240px;
+  // > * {
+  //   width: 100%;
+  // }
+}
+
+#timerSetup > *:not(:first-child) {
+  margin-top: 1rem;
+}
+
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  > * {
+    margin-top: 0.5rem;
+  }
+}
+
+#addExerciseBtn {
+  margin-top: 1rem;
+}
+
+#timerControls {
+  display: flex;
+  justify-content: center;
+
+  > button {
+    margin-right: 0.5rem;
+  }
 }

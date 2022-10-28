@@ -1,5 +1,6 @@
 import { exerciseList } from "./globalVariables.js";
 import { validateInput } from "./validation.js";
+import { addClass, removeClass } from "./modifyClass.js";
 
 export let exerciseArray = [];
 
@@ -17,6 +18,7 @@ export function exercisesToList() {
     // Add delete button
     const btn = document.createElement("button");
     btn.innerHTML = "Delete";
+    btn.classList.add("secondaryBtn");
     btn.dataset.id = index;
     btn.addEventListener("click", deleteExercise);
 
@@ -34,13 +36,22 @@ export function addExercise() {
     messageTargetClass: "exerciseErrorContainer",
     elementId: "exerciseError",
   });
-  // Check is errors displayd
+
+  // Show message container if errors displayed
+  if (document.querySelectorAll(".exerciseError").length > 0) {
+    addClass("exerciseErrorContainer", "visible");
+    removeClass("exerciseErrorContainer", "hidden");
+  }
+
+  // If error are not displayed
   if (document.querySelectorAll(".exerciseError").length == 0) {
     // Empty ul
     exerciseList.innerHTML = "";
+    document.getElementById("exerciseListInfoContainer").innerHTML = "";
 
-    // Removes error message element from HTML
-    //removeErrorMessage("exerciseError");
+    // Hides error message container element from HTML
+    addClass("exerciseErrorContainer", "hidden");
+    removeClass("exerciseErrorContainer", "visible");
 
     // Get the exercise name from input field
     const exerciseInput = document.getElementById("exercises");
@@ -77,6 +88,6 @@ function deleteExercise(e) {
     messageExerciseListEmpty.textContent = `You removed all list elements. Add new exercises.`;
 
     // Adds p element to ul
-    exerciseList.appendChild(messageExerciseListEmpty);
+    document.getElementById("exerciseListInfoContainer").appendChild(messageExerciseListEmpty);
   }
 }

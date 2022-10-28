@@ -2,6 +2,7 @@ import { createButton } from "./js/createButton.js";
 import { runningUiOn, settingsUiOn, timerRunningUi, timerNotRunningUi } from "./js/timerUi.js";
 import { validateInput } from "./js/validation.js";
 import { addExercise } from "./js/exercises.js";
+import { addClass, removeClass } from "./js/modifyClass.js";
 
 // let exerciseArray = [];
 
@@ -101,6 +102,7 @@ function setActiveElementFirstTime() {
   }
 }
 
+/*
 // Show time in html element
 function showTimeInHtmlElement() {
   // Checking when timer goes under 10 seconds and add leading 0 to seconds
@@ -109,6 +111,19 @@ function showTimeInHtmlElement() {
   } else {
     createMessage("timer", `0${seconds}:${hundredsOfSeconds}`);
   }
+} */
+function showTimeInHtmlElement() {
+  let secondsForUi = seconds;
+  let hundredsOfSecondsForUi = hundredsOfSeconds;
+  // Checking when timer goes under 10 seconds and add leading 0 to seconds
+
+  if (hundredsOfSeconds < 10) {
+    hundredsOfSecondsForUi = `0${hundredsOfSeconds}`;
+  }
+  if (seconds < 10) {
+    secondsForUi = `0${seconds}`;
+  }
+  createMessage("timer", `${secondsForUi}:${hundredsOfSecondsForUi}`);
 }
 
 // Timer function
@@ -193,6 +208,10 @@ function timer() {
 function start() {
   // Check if error messages are displayd. If not run timer.
   if (document.querySelectorAll(".timeError").length == 0) {
+    // Show timer headeading
+    removeClass("timerHeading", "hidden");
+    addClass("timerHeading", "visible");
+
     // If timer has been ended and user clicks start
     if (isEnded) {
       createMessage("timerHeading", `Keep going on!`);
@@ -251,6 +270,10 @@ function end() {
   isPaused = true;
   // Ends timer
   isEnded = true;
+
+  // Hide timer heading
+  removeClass("timerHeading", "visible");
+  addClass("timerHeading", "hidden");
 
   // Reset timer text element
   createMessage("timer", ``);
