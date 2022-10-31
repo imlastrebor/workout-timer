@@ -9,7 +9,7 @@
 }
 
 .visible {
-  display: block !important;
+  display: block;
 }
 
 html,
@@ -27,7 +27,7 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100%;
+
   > *:not(:first-child) {
     margin-top: 3rem;
   }
@@ -41,7 +41,8 @@ footer {
 }
 
 section {
-  min-width: 240px;
+  width: 100%;
+  max-width: 412px;
   // > * {
   //   width: 100%;
   // }
@@ -66,9 +67,24 @@ section {
 
 #timerControls {
   display: flex;
-  justify-content: center;
+  justify-content: start;
 
-  > button {
+  > button:not(:last-child) {
     margin-right: 0.5rem;
   }
+}
+
+.exerciseInfoContainer {
+  display: flex;
+}
+
+.dot {
+  height: 24px;
+  width: 24px;
+  background-color: #bbb;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+  display: inline-block;
+  flex-grow: 0;
+  flex-shrink: 0;
 }

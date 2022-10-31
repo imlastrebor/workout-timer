@@ -11,6 +11,13 @@ export function exercisesToList() {
     // Variables for li element
     const listElement = document.createElement("li");
 
+    const exerciseInfoContainer = document.createElement("div");
+    exerciseInfoContainer.classList.add("exerciseInfoContainer");
+
+    const activeIndicator = document.createElement("span");
+    activeIndicator.classList.add("dot");
+    //activeIndicator.setAttribute("id", "activeExercise");
+
     // Variable for p element. Inserts exercise name to p element
     const exerciseText = document.createElement("p");
     exerciseText.textContent = exercise;
@@ -23,7 +30,9 @@ export function exercisesToList() {
     btn.addEventListener("click", deleteExercise);
 
     // Adds p element and button to li element and after that adds li element to ul
-    listElement.appendChild(exerciseText);
+    listElement.appendChild(exerciseInfoContainer);
+    exerciseInfoContainer.appendChild(activeIndicator);
+    exerciseInfoContainer.appendChild(exerciseText);
     listElement.appendChild(btn);
     exerciseList.appendChild(listElement);
   });
@@ -45,7 +54,7 @@ export function addExercise() {
 
   // If error are not displayed
   if (document.querySelectorAll(".exerciseError").length == 0) {
-    // Empty ul
+    // Empty ul so it doesn't show old elements as double
     exerciseList.innerHTML = "";
     document.getElementById("exerciseListInfoContainer").innerHTML = "";
 

@@ -7,29 +7,27 @@ export let settingsUiOn = false;
 export function timerNotRunningUi() {
   settingsUiOn = true;
   runningUiOn = false;
-  console.log("timer is ended");
-
-  removeClass("pause", "visible");
   addClass("pause", "hidden");
-  removeClass("end", "visible");
   addClass("end", "hidden");
 
+  // Left align button
+  document.getElementById("timerControls").style.justifyContent = "start";
+
   // Show inputs
-  addClassForElements(".inputWrapper", "visible");
   removeClassForElements(".inputWrapper", "hidden");
 }
 
 // When timer is running show this UI
 export function timerRunningUi() {
   removeClass("pause", "hidden");
-  addClass("pause", "visible");
-  removeClass("end", "hiddeb");
-  addClass("end", "visible");
+  removeClass("end", "hidden");
 
   runningUiOn = true;
   settingsUiOn = false;
 
+  // Center buttons
+  document.getElementById("timerControls").style.justifyContent = "center";
+
   // Hide inputs
   addClassForElements(".inputWrapper", "hidden");
-  removeClassForElements(".inputWrapper", "visible");
 }

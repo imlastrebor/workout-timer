@@ -86,6 +86,7 @@ const activeIndicator = "ACTIVE EXERCISE";
 const activeElement = document.createElement("p");
 activeElement.setAttribute("id", "activeExercise");
 activeElement.textContent = activeIndicator;
+//const activeElement = document.getElementById("activeExercise")
 
 let index = 0;
 
@@ -295,3 +296,10 @@ const timerInterval = setInterval(() => {
     timer();
   }
 }, 10);
+
+function handleSubmit(event) {
+  event.preventDefault();
+  console.log("Exercise added!");
+}
+
+document.getElementById("addExerciseForm").addEventListener("submit", handleSubmit);

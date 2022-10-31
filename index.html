@@ -16,16 +16,20 @@
     <main>
       <section id="timerSetup">
         <div class="inputWrapper">
-          <label for="activeTime">Active time</label>
-          <p id="activeTimeHint">Add time in seconds</p>
-          <div id="activeTimeErrorContainer" class="error"></div>
-          <input type="number" id="activeTime" aria-describedby="activeTimeHint" />
+          <form>
+            <label for="activeTime">Active time</label>
+            <p id="activeTimeHint">Add time in seconds</p>
+            <div id="activeTimeErrorContainer" class="error"></div>
+            <input type="number" id="activeTime" aria-describedby="activeTimeHint" />
+          </form>
         </div>
         <div class="inputWrapper">
-          <label for="restTime">Rest time</label>
-          <p id="restTimeHint">Add time in seconds</p>
-          <div id="restTimeErrorContainer" class="error"></div>
-          <input type="number" id="restTime" aria-describedby="restTimeHint" />
+          <form>
+            <label for="restTime">Rest time</label>
+            <p id="restTimeHint">Add time in seconds</p>
+            <div id="restTimeErrorContainer" class="error"></div>
+            <input type="number" id="restTime" aria-describedby="restTimeHint" />
+          </form>
         </div>
 
         <h4 id="timerHeading" class="hidden"></h4>
@@ -36,10 +40,12 @@
       </section>
       <section id="exercisesSetup">
         <div class="inputWrapper">
-          <label for="exercises">Exercise name</label>
-          <input type="text" id="exercises" placeholder="Exercise name" />
-          <button id="addExerciseBtn">Add exercise</button>
-          <div id="exerciseErrorContainer" class="error hidden"></div>
+          <form id="addExerciseForm">
+            <label for="exercises">Exercise name</label>
+            <input type="text" id="exercises" placeholder="Exercise name" />
+            <button id="addExerciseBtn" type="submit">Add exercise</button>
+            <div id="exerciseErrorContainer" class="error hidden"></div>
+          </form>
         </div>
         <div class="exerciseListWrapper">
           <h3>Exercises</h3>
@@ -49,7 +55,7 @@
           <ul id="exerciseList"></ul>
         </div>
       </section>
-      <footer><h4>Timer made by Robert Salmi</h4></footer>
     </main>
+    <footer><h4>Timer made by Robert Salmi</h4></footer>
   </body>
 </html>
