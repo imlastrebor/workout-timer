@@ -1,51 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/reset.css" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <script type="module" src="main.js"></script>
     <title>Workout Timer</title>
-</head>
-<body>
-    <h1>Workout Timer</h1>
-    <section>
-        <div>
-            <div class="input-wrapper">
-                <label for="activeTime">Active time</label>
-                <p id="activeTimeHint">Add time in seconds</p>
-                <p id="activeTimeError"></p>
-                <input type="number" id="activeTime" aria-describedby="activeTimeHint">
-            </div>
-            <div class="input-wrapper">    
-                <label for="restTime">Rest time</label>
-                <p id="restTimeHint">Add time in seconds</p>
-                <p id="restTimeError"></p>
-                <input type="number" id="restTime" aria-describedby="restTimeHint">
-            </div>
+  </head>
+  <body id="bodyId">
+    <header>
+      <h1 id="appHeading">Workout Timer</h1>
+    </header>
+    <main>
+      <section id="timerSetup">
+        <div class="inputWrapper">
+          <form>
+            <label for="activeTime">Active time</label>
+            <p id="activeTimeHint">Add time in seconds</p>
+            <div id="activeTimeErrorContainer" class="error"></div>
+            <input type="number" id="activeTime" aria-describedby="activeTimeHint" />
+          </form>
         </div>
-        <p id="timer" ></p>
-        <div>
-            <button onclick="start()">Start</button>
-            <button onclick="pause()">Pause</button>
-            <button onclick="end()">End</button>
+        <div class="inputWrapper">
+          <form>
+            <label for="restTime">Rest time</label>
+            <p id="restTimeHint">Add time in seconds</p>
+            <div id="restTimeErrorContainer" class="error"></div>
+            <input type="number" id="restTime" aria-describedby="restTimeHint" />
+          </form>
         </div>
-    </section>
-    <section>
-        <div>
-            <label for="exercises">Exercises</label>
-            <input type="text" id="exercises" placeholder="Exercise name">
-            <button onclick="addExercise()">Add exercise</button>
-            <p id="messageContainer"></p>
-        </div>
-        <div>
-            <h3>Exercises</h3>
-            <ul id="exerciseList">
-                <p>You haven't add any exercises</p>
-            </ul>
-        </div>
-    </section>
 
-</body>
-    <script src="main.js" ></script>
+        <h4 id="timerHeading" class="hidden"></h4>
+        <h2 id="timer"></h2>
+        <div id="timerControls">
+          <button id="start">Start</button>
+        </div>
+      </section>
+      <section id="exercisesSetup">
+        <div class="inputWrapper">
+          <form id="addExerciseForm">
+            <label for="exercises">Exercise name</label>
+            <input type="text" id="exercises" placeholder="Exercise name" />
+            <button id="addExerciseBtn" type="submit">Add exercise</button>
+            <div id="exerciseErrorContainer" class="error hidden"></div>
+          </form>
+        </div>
+        <div class="exerciseListWrapper">
+          <h3>Exercises</h3>
+          <div id="exerciseListInfoContainer">
+            <p>You haven't add any exercises</p>
+          </div>
+          <ul id="exerciseList"></ul>
+        </div>
+      </section>
+    </main>
+    <footer><h4>Footer</h4></footer>
+  </body>
 </html>

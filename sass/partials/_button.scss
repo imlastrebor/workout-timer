@@ -1,0 +1,23 @@
+@import "./fonts";
+
+button {
+  font-family: $body-font;
+  font-weight: 400;
+  color: #fff;
+  padding: 0.5rem 0.75rem;
+  background-color: $secondary-color;
+  border-radius: 0.25rem;
+  border: $secondary-color solid 1px;
+}
+
+.secondaryBtn {
+  background-color: #fff;
+  color: $secondary-color;
+  border: $secondary-color solid 1px;
+  padding: 0.25rem 0.5rem;
+}
+
+.disabledBtn {
+  background-color: $ui-default;
+  border-color: $ui-default;
+}
