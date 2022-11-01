@@ -1,5 +1,6 @@
 import { exerciseList } from "./globalVariables.js";
 import { validateInput } from "./validation.js";
+import { addClass, removeClass } from "./modifyClass.js";
 
 export let exerciseArray = [];
 
@@ -10,6 +11,12 @@ export function exercisesToList() {
     // Variables for li element
     const listElement = document.createElement("li");
 
+    const exerciseInfoContainer = document.createElement("div");
+    exerciseInfoContainer.classList.add("exerciseInfoContainer");
+
+    const activeIndicator = document.createElement("span");
+    activeIndicator.classList.add("dot");
+
     // Variable for p element. Inserts exercise name to p element
     const exerciseText = document.createElement("p");
     exerciseText.textContent = exercise;
@@ -17,11 +24,15 @@ export function exercisesToList() {
     // Add delete button
     const btn = document.createElement("button");
     btn.innerHTML = "Delete";
+    btn.classList.add("secondaryBtn");
+    btn.classList.add("deleteExerciseBtn");
     btn.dataset.id = index;
     btn.addEventListener("click", deleteExercise);
 
     // Adds p element and button to li element and after that adds li element to ul
-    listElement.appendChild(exerciseText);
+    listElement.appendChild(exerciseInfoContainer);
+    exerciseInfoContainer.appendChild(activeIndicator);
+    exerciseInfoContainer.appendChild(exerciseText);
     listElement.appendChild(btn);
     exerciseList.appendChild(listElement);
   });
@@ -34,13 +45,22 @@ export function addExercise() {
     messageTargetClass: "exerciseErrorContainer",
     elementId: "exerciseError",
   });
-  // Check is errors displayd
-  if (document.querySelectorAll(".exerciseError").length == 0) {
-    // Empty ul
-    exerciseList.innerHTML = "";
 
-    // Removes error message element from HTML
-    //removeErrorMessage("exerciseError");
+  // Show message container if errors displayed
+  if (document.querySelectorAll(".exerciseError").length > 0) {
+    addClass("exerciseErrorContainer", "visible");
+    removeClass("exerciseErrorContainer", "hidden");
+  }
+
+  // If error are not displayed
+  if (document.querySelectorAll(".exerciseError").length == 0) {
+    // Empty ul so it doesn't show old elements as double
+    exerciseList.innerHTML = "";
+    document.getElementById("exerciseListInfoContainer").innerHTML = "";
+
+    // Hides error message container element from HTML
+    addClass("exerciseErrorContainer", "hidden");
+    removeClass("exerciseErrorContainer", "visible");
 
     // Get the exercise name from input field
     const exerciseInput = document.getElementById("exercises");
@@ -77,6 +97,6 @@ function deleteExercise(e) {
     messageExerciseListEmpty.textContent = `You removed all list elements. Add new exercises.`;
 
     // Adds p element to ul
-    exerciseList.appendChild(messageExerciseListEmpty);
+    document.getElementById("exerciseListInfoContainer").appendChild(messageExerciseListEmpty);
   }
 }

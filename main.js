@@ -2,6 +2,8 @@ import { createButton } from "./js/createButton.js";
 import { runningUiOn, settingsUiOn, timerRunningUi, timerNotRunningUi } from "./js/timerUi.js";
 import { validateInput } from "./js/validation.js";
 import { addExercise } from "./js/exercises.js";
+import { addClass, removeClass } from "./js/modifyClass.js";
+import { disableTimerControl } from "./js/disable.js";
 
 // let exerciseArray = [];
 
@@ -18,6 +20,8 @@ let isPaused = true;
 let isEnded = false;
 
 let activeElementIsSet;
+
+let index = 0;
 
 const exerciseList = document.getElementById("exerciseList");
 
@@ -81,12 +85,11 @@ function setRestTime() {
 }
 
 // Active exercise indicator
-const activeIndicator = "ACTIVE EXERCISE";
-const activeElement = document.createElement("p");
-activeElement.setAttribute("id", "activeExercise");
-activeElement.textContent = activeIndicator;
-
-let index = 0;
+// const activeIndicator = "ACTIVE EXERCISE";
+// const activeElement = document.createElement("p");
+// activeElement.setAttribute("id", "activeExercise");
+// activeElement.textContent = activeIndicator;
+const activeElement = document.getElementById("activeExercise");
 
 function createMessage(targetId, message) {
   document.getElementById(targetId).innerHTML = message;
@@ -96,19 +99,26 @@ function createMessage(targetId, message) {
 function setActiveElementFirstTime() {
   if (exerciseList.getElementsByTagName("li").length > 0 && activeElementIsSet === undefined) {
     // Activating first exercise from the list
-    exerciseList.getElementsByTagName("li")[0].appendChild(activeElement);
+
+    exerciseList.getElementsByTagName("li")[0].getElementsByClassName("dot")[0].classList.add("activeExercise");
+
     activeElementIsSet = true;
   }
 }
 
 // Show time in html element
 function showTimeInHtmlElement() {
+  let secondsForUi = seconds;
+  let hundredsOfSecondsForUi = hundredsOfSeconds;
   // Checking when timer goes under 10 seconds and add leading 0 to seconds
-  if (seconds > 9) {
-    createMessage("timer", `${seconds}:${hundredsOfSeconds}`);
-  } else {
-    createMessage("timer", `0${seconds}:${hundredsOfSeconds}`);
+
+  if (hundredsOfSeconds < 10) {
+    hundredsOfSecondsForUi = `0${hundredsOfSeconds}`;
   }
+  if (seconds < 10) {
+    secondsForUi = `0${seconds}`;
+  }
+  createMessage("timer", `${secondsForUi}:${hundredsOfSecondsForUi}`);
 }
 
 // Timer function
@@ -137,8 +147,14 @@ function timer() {
     isPaused = true;
 
     if (currentPhase === "active") {
-      createMessage("timerHeading", `Exercise done!`);
-      //document.getElementById('timer').innerHTML = `Workout done! Time to rest`;
+      if (exerciseList.getElementsByTagName("li").length >= 1) {
+        exerciseList
+          .getElementsByTagName("li")
+          [index].getElementsByClassName("dot")[0]
+          .classList.remove("activeExercise");
+      }
+
+      createMessage("timerHeading", `Workout done! Time to rest.`);
 
       // If current phase is active lets change the it to rest
       currentPhase = "rest";
@@ -150,7 +166,7 @@ function timer() {
       setTimeout(() => {
         // If end timer is clicked during timeout timer doesn't start running after timeout ends
         if (!isEnded) {
-          createMessage("timerHeading", `Time to rest.`);
+          createMessage("timerHeading", `Rest time`);
           // Set value for isPaused to false so timer starts running
           isPaused = false;
         }
@@ -169,8 +185,9 @@ function timer() {
         }
         // Bump up the index
         index++;
+
         // Add active indicator into the element
-        exerciseList.getElementsByTagName("li")[index].appendChild(activeElement);
+        exerciseList.getElementsByTagName("li")[index].getElementsByClassName("dot")[0].classList.add("activeExercise");
       }
 
       // Set up seconds to active seconds and reset hundredsOfSeconds
@@ -180,7 +197,7 @@ function timer() {
       setTimeout(() => {
         // If end timer is clicked during timeout timer doesn't start running after timeout ends
         if (!isEnded) {
-          createMessage("timerHeading", `Keep going on!`);
+          createMessage("timerHeading", `Workout time`);
           // Set value for isPaused to false so timer starts running
           isPaused = false;
         }
@@ -193,15 +210,21 @@ function timer() {
 function start() {
   // Check if error messages are displayd. If not run timer.
   if (document.querySelectorAll(".timeError").length == 0) {
+    // Show timer headeading
+    removeClass("timerHeading", "hidden");
+    addClass("timerHeading", "visible");
+
+    disableTimerControl("started");
+
     // If timer has been ended and user clicks start
     if (isEnded) {
-      createMessage("timerHeading", `Keep going on!`);
+      createMessage("timerHeading", `Workout time`);
       seconds = activeTimeInSeconds;
       hundredsOfSeconds = 0;
       currentPhase = "active";
       if (exerciseList.getElementsByTagName("li").length > 0) {
         // Activating first exercise from the list
-        exerciseList.getElementsByTagName("li")[0].appendChild(activeElement);
+        exerciseList.getElementsByTagName("li")[0].getElementsByClassName("dot")[0].classList.add("activeExercise");
       }
       isEnded = false;
     }
@@ -209,7 +232,7 @@ function start() {
     if (isPaused) {
       // Check if timer is used first time
       if (currentPhase === "active" && seconds === undefined) {
-        createMessage("timerHeading", `Keep going on!`);
+        createMessage("timerHeading", `Workout time`);
 
         // Set seconds to active time that user has set
         seconds = activeTimeInSeconds;
@@ -217,7 +240,7 @@ function start() {
         // Check if excercises is added
         if (exerciseList.getElementsByTagName("li").length > 0) {
           // Activating first exercise from the list
-          exerciseList.getElementsByTagName("li")[0].appendChild(activeElement);
+          exerciseList.getElementsByTagName("li")[0].getElementsByClassName("dot")[0].classList.add("activeExercise");
         }
       }
       if (runningUiOn === false) {
@@ -235,6 +258,7 @@ function start() {
 function pause() {
   // If timer is not paused
   if (!isPaused) {
+    disableTimerControl("paused");
     // Pause timer
     isPaused = true;
   }
@@ -244,6 +268,7 @@ function pause() {
 function end() {
   // Add timer setting UI
   if (settingsUiOn === false) {
+    disableTimerControl("ended");
     timerNotRunningUi();
   }
 
@@ -251,6 +276,10 @@ function end() {
   isPaused = true;
   // Ends timer
   isEnded = true;
+
+  // Hide timer heading
+  removeClass("timerHeading", "visible");
+  addClass("timerHeading", "hidden");
 
   // Reset timer text element
   createMessage("timer", ``);
@@ -260,7 +289,7 @@ function end() {
   // Check if excercises is added
   if (exerciseList.getElementsByTagName("li").length > 0) {
     // Removes active indicator
-    document.getElementById("activeExercise").remove();
+    document.getElementsByTagName("li")[index].getElementsByClassName("dot")[0].classList.remove("activeExercise");
     // Sets index back to 0 so when timer is started it's correct
     index = 0;
   }
@@ -272,3 +301,10 @@ const timerInterval = setInterval(() => {
     timer();
   }
 }, 10);
+
+function handleSubmit(event) {
+  event.preventDefault();
+  console.log("Exercise added!");
+}
+
+document.getElementById("addExerciseForm").addEventListener("submit", handleSubmit);

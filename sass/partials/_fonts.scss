@@ -1,0 +1,47 @@
+// Google Fonts
+
+@import url("https://fonts.googleapis.com/css2?family=Courier+Prime:wght@700&family=Kanit:wght@400;500;600&family=Source+Sans+Pro:wght@300;400;600&display=swap");
+
+// Font Variables
+$header-font: "Kanit", sans-serif;
+$body-font: "Source Sans Pro", sans-serif;
+$timer-font: "Courier Prime", monospace;
+
+// Styles
+body {
+  font-family: $body-font;
+  font-weight: 300;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+label {
+  font-family: $header-font;
+  font-weight: 500;
+  color: $primary-color;
+  margin: 0;
+}
+
+#appHeading,
+#timerHeading {
+  text-align: center;
+}
+
+h2 {
+  font-size: 5rem;
+  font-family: $timer-font;
+  font-weight: 700;
+  text-align: center;
+}
+
+p {
+  margin: 0;
+}
+
+.timeError,
+.exerciseError {
+  color: red;
+}

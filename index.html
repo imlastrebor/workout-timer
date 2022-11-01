@@ -6,47 +6,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./css/reset.css" />
     <link rel="stylesheet" href="./css/style.css" />
-
+    <script type="module" src="main.js"></script>
     <title>Workout Timer</title>
   </head>
   <body id="bodyId">
-    <h1>Workout Timer</h1>
-    <section id="timerSetup">
-      <div>
+    <header>
+      <h1 id="appHeading">Workout Timer</h1>
+    </header>
+    <main>
+      <section id="timerSetup">
         <div class="inputWrapper">
-          <label for="activeTime">Active time</label>
-          <p id="activeTimeHint">Add time in seconds</p>
-          <div id="activeTimeErrorContainer" class="error"></div>
-          <input type="number" id="activeTime" aria-describedby="activeTimeHint" />
+          <form>
+            <label for="activeTime">Active time</label>
+            <p id="activeTimeHint">Add time in seconds</p>
+            <div id="activeTimeErrorContainer" class="error"></div>
+            <input type="number" id="activeTime" aria-describedby="activeTimeHint" />
+          </form>
         </div>
         <div class="inputWrapper">
-          <label for="restTime">Rest time</label>
-          <p id="restTimeHint">Add time in seconds</p>
-          <div id="restTimeErrorContainer" class="error"></div>
-          <input type="number" id="restTime" aria-describedby="restTimeHint" />
+          <form>
+            <label for="restTime">Rest time</label>
+            <p id="restTimeHint">Add time in seconds</p>
+            <div id="restTimeErrorContainer" class="error"></div>
+            <input type="number" id="restTime" aria-describedby="restTimeHint" />
+          </form>
         </div>
-      </div>
-      <h4 id="timerHeading"></h4>
-      <p id="timer"></p>
-    </section>
-    <section>
-      <div class="inputWrapper">
-        <label for="exercises">Exercises</label>
-        <input type="text" id="exercises" placeholder="Exercise name" />
-        <button id="addExerciseBtn">Add exercise</button>
-        <div id="exerciseErrorContainer" class="error"></div>
-        <div id="messageContainer"></div>
-      </div>
-      <div id="timerControls">
-        <button id="start">Start</button>
-      </div>
-      <div>
-        <h3>Exercises</h3>
-        <ul id="exerciseList">
-          <p>You haven't add any exercises</p>
-        </ul>
-      </div>
-    </section>
+
+        <h4 id="timerHeading" class="hidden"></h4>
+        <h2 id="timer"></h2>
+        <div id="timerControls">
+          <button id="start">Start</button>
+        </div>
+      </section>
+      <section id="exercisesSetup">
+        <div class="inputWrapper">
+          <form id="addExerciseForm">
+            <label for="exercises">Exercise name</label>
+            <input type="text" id="exercises" placeholder="Exercise name" />
+            <button id="addExerciseBtn" type="submit">Add exercise</button>
+            <div id="exerciseErrorContainer" class="error hidden"></div>
+          </form>
+        </div>
+        <div class="exerciseListWrapper">
+          <h3>Exercises</h3>
+          <div id="exerciseListInfoContainer">
+            <p>You haven't add any exercises</p>
+          </div>
+          <ul id="exerciseList"></ul>
+        </div>
+      </section>
+    </main>
+    <footer><h4>Footer</h4></footer>
   </body>
-  <script type="module" src="main.js"></script>
 </html>
