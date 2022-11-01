@@ -12,32 +12,31 @@
   display: block;
 }
 
-html,
 body {
-  height: 100%;
-}
-body {
-  margin: 0 1.5rem 0 1.5rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 header {
   padding: 4rem 0 3rem 0;
 }
 
 main {
+  margin: 0 1.5rem 3rem 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex: 1;
 
   > *:not(:first-child) {
     margin-top: 3rem;
   }
 }
 footer {
-  background-color: rgb(255, 242, 252);
+  background-color: $primary-light-color;
   width: 100%;
   text-align: center;
-  padding: 2rem;
-  margin-top: auto !important;
+  padding: 2rem 0;
 }
 
 section {
@@ -56,6 +55,9 @@ section {
   display: flex;
   flex-direction: column;
   align-items: start;
+}
+
+form {
   > * {
     margin-top: 0.5rem;
   }
@@ -79,12 +81,16 @@ section {
 }
 
 .dot {
-  height: 24px;
-  width: 24px;
-  background-color: #bbb;
-  margin-right: 0.5rem;
+  height: 1rem;
+  width: 1rem;
+  background-color: $primary-light-color;
   border-radius: 50%;
   display: inline-block;
   flex-grow: 0;
   flex-shrink: 0;
+  margin: 0.125rem 0.5rem 0 0;
+}
+
+.activeExercise {
+  background-color: $primary-color;
 }

@@ -16,7 +16,6 @@ export function exercisesToList() {
 
     const activeIndicator = document.createElement("span");
     activeIndicator.classList.add("dot");
-    //activeIndicator.setAttribute("id", "activeExercise");
 
     // Variable for p element. Inserts exercise name to p element
     const exerciseText = document.createElement("p");
@@ -26,6 +25,7 @@ export function exercisesToList() {
     const btn = document.createElement("button");
     btn.innerHTML = "Delete";
     btn.classList.add("secondaryBtn");
+    btn.classList.add("deleteExerciseBtn");
     btn.dataset.id = index;
     btn.addEventListener("click", deleteExercise);
 

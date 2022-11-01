@@ -16,3 +16,8 @@ button {
   border: $secondary-color solid 1px;
   padding: 0.25rem 0.5rem;
 }
+
+.disabledBtn {
+  background-color: $ui-default;
+  border-color: $ui-default;
+}
